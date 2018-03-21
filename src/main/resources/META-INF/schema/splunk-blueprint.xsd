@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="urn:pronoia.com/schema/blueprint/splunk"
+        elementFormDefault="qualified">
+
+    <xs:element name="splunk-client">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="host" type="xs:string" use="required"/>
+            <xs:attribute name="port" type="xs:unsignedShort" default="8088"/>
+            <xs:attribute name="authorization-token" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        May want to have a list of tokens? Or use token-id's?
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="validate-certificates" type="xs:boolean" default="true"/>
+            <xs:attribute name="use-ssl" type="xs:boolean" default="true"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="splunk-jmx-attribute-change-monitor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="observed-object" type="xs:string" maxOccurs="unbounded"/>
+                <xs:element name="observed-attributes" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The list of attributes that will be included in the difference calculation.
+
+                            If this is not specified, all attributes will be observed except the specifically excluded attributes?
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="attribute" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="collected-attributes" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Attributes that will be collected and delivered to Splunk, but not used in the difference calculation?
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="attribute" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="excluded-attributes" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Attributes that will be excluded from the difference calculation?
+
+                            TODO: Check to see if they will still be delivered to Splunk.
+                            TODO: Check to see if they will still be applied if observed-attributes is set (I think this attribute is ignored if observed-attributes is specified)
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="attribute" type="xs:string" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="splunk-event" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="property" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="index" type="xs:string"/>
+                        <xs:attribute name="source" type="xs:string"/>
+                        <xs:attribute name="sourcetype" type="xs:string"/>
+
+                        <xs:attribute name="include-null-attrs" type="xs:boolean"/>
+                        <xs:attribute name="include-empty-attrs" type="xs:boolean"/>
+                        <xs:attribute name="include-zero-attrs" type="xs:boolean"/>
+                        <xs:attribute name="include-empty-list" type="xs:boolean"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="splunk-client-id" type="xs:ID" />
+            <xs:attribute name="granularity-period" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        How often to poll for changes
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="max-suppressed-duplicate-events" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>
+                        The maximum number of duplicate events that will be suppressed - used to guarantee a minimum event cadence.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="splunk-jmx-notification-listener">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="source-mbean" type="xs:string" maxOccurs="unbounded"/>
+                <xs:element name="splunk-event" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="property" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="index" type="xs:string"/>
+                        <xs:attribute name="source" type="xs:string"/>
+                        <xs:attribute name="sourcetype" type="xs:string"/>
+
+                        <xs:attribute name="include-null-attrs" type="xs:boolean"/>
+                        <xs:attribute name="include-empty-attrs" type="xs:boolean"/>
+                        <xs:attribute name="include-empty-list" type="xs:boolean"/>
+
+                        <xs:attribute name="include-notification-message" type="xs:boolean"/>
+                        <xs:attribute name="include-notification-sequence-number" type="xs:boolean"/>
+                        <xs:attribute name="include-notification-source" type="xs:boolean"/>
+                        <xs:attribute name="include-notification-type" type="xs:boolean"/>
+                        <xs:attribute name="include-user-data" type="xs:boolean"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="splunk-client-id" type="xs:ID" />
+        </xs:complexType>
+
+    </xs:element>
+
+</schema>

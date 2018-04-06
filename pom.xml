@@ -23,7 +23,7 @@
     <groupId>com.github.hqstevenson.splunk</groupId>
     <artifactId>splunk.aries.blueprint</artifactId>
     <packaging>bundle</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 
     <name>Splunk Blueprint Support (Apache Aries)</name>
     <description>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.github.hqstevenson.aries</groupId>
             <artifactId>aries.blueprint.util</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
@@ -75,14 +75,14 @@
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms.activemq</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -200,6 +200,12 @@
                     <!-- TODO:  Make specific Splunk bundles optional -->
                     <instructions>
                         <Export-Package>com.pronoia.splunk.aries.blueprint.*</Export-Package>
+                        <Import-Package>
+                            javax.jms;version=!;resolution:=optional,
+                            com.pronoia.splunk.jms.*;resolution:=optional,
+                            com.pronoia.splunk.jmx.*;resolution:=optional,
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

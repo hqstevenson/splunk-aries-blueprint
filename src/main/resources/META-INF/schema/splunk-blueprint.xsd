@@ -106,7 +106,8 @@
                 </xs:element>
             </xs:sequence>
 
-            <xs:attribute name="splunk-client-id" type="xs:ID" />
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="splunk-client-id" type="xs:NCName" />
             <xs:attribute name="granularity-period" type="xs:unsignedInt">
                 <xs:annotation>
                     <xs:documentation>
@@ -155,7 +156,50 @@
                 </xs:element>
             </xs:sequence>
 
-            <xs:attribute name="splunk-client-id" type="xs:ID" />
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="splunk-client-id" type="xs:NCName" />
+        </xs:complexType>
+
+    </xs:element>
+
+    <xs:element name="splunk-jms-consumer-factory">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="destination-pattern" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="destination-type">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="topic"/>
+                                            <xs:enumeration value="queue"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="splunk-event" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="property" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="index" type="xs:string"/>
+                        <xs:attribute name="source" type="xs:string"/>
+                        <xs:attribute name="sourcetype" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="splunk-client-id" type="xs:NCName" />
         </xs:complexType>
 
     </xs:element>

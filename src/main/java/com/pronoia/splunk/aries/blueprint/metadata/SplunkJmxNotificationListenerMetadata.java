@@ -86,17 +86,17 @@ public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBean
         BeanProperty answer = null;
 
         switch (propertyName) {
-        case "splunkClient":
-            MutableReferenceMetadata referenceMetadata = ReferenceMetadataUtil.create(EventCollectorClient.class);
-            if (propertyValue != null && !propertyName.isEmpty()) {
-                referenceMetadata.setFilter("splunk-client-id=" + propertyValue);
-            }
-            answer = BeanPropertyMetadataUtil.create(propertyName, referenceMetadata);
-            break;
-         default:
-            // TODO:  Make the message better - include more detail
-            String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - unsupported propertyName", propertyName, propertyValue);
-            throw new IllegalArgumentException(message);
+            case "splunkClient":
+                MutableReferenceMetadata referenceMetadata = ReferenceMetadataUtil.create(EventCollectorClient.class);
+                if (propertyValue != null && !propertyName.isEmpty()) {
+                    referenceMetadata.setFilter("splunk-client-id=" + propertyValue);
+                }
+                answer = BeanPropertyMetadataUtil.create(propertyName, referenceMetadata);
+                break;
+             default:
+                // TODO:  Make the message better - include more detail
+                String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - unsupported propertyName", propertyName, propertyValue);
+                throw new IllegalArgumentException(message);
         }
 
         return answer;

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 package com.pronoia.splunk.aries.blueprint.metadata;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import com.pronoia.aries.blueprint.util.metadata.AbstractSingletonBeanMetadata;
 import com.pronoia.aries.blueprint.util.reflect.BeanPropertyMetadataUtil;
@@ -26,11 +31,6 @@ import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
 
 import com.pronoia.splunk.eventcollector.EventCollectorClient;
 import com.pronoia.splunk.jmx.SplunkJmxAttributeChangeMonitor;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.aries.blueprint.mutable.MutableReferenceMetadata;
 

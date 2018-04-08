@@ -19,7 +19,7 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <splunk-jmx-notification-listener xmlns="urn:pronoia.com/schema/blueprint/splunk">
+    <splunk-jmx-notification-listener id="jvm-gc-listener" xmlns="urn:pronoia.com/schema/blueprint/splunk">
         <source-mbean>java.lang:type=GarbageCollector,name=*</source-mbean>
         <splunk-event index="fuse_statistics" sourcetype="karaf-jdk-gc" />
     </splunk-jmx-notification-listener>

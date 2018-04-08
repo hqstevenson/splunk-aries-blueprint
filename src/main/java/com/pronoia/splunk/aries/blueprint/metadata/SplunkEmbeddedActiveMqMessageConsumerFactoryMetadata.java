@@ -22,13 +22,11 @@ import java.util.Map;
 
 import com.pronoia.aries.blueprint.util.metadata.AbstractSingletonBeanMetadata;
 import com.pronoia.aries.blueprint.util.reflect.BeanPropertyMetadataUtil;
-import com.pronoia.aries.blueprint.util.reflect.ListMetadataUtil;
 import com.pronoia.aries.blueprint.util.reflect.ReferenceMetadataUtil;
 
 import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
-
 import com.pronoia.splunk.eventcollector.EventCollectorClient;
-import com.pronoia.splunk.jmx.SplunkJmxNotificationListener;
+import com.pronoia.splunk.jms.activemq.SplunkEmbeddedActiveMQMessageConsumerFactory;
 
 import org.apache.aries.blueprint.mutable.MutableReferenceMetadata;
 
@@ -40,22 +38,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBeanMetadata {
+public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends AbstractSingletonBeanMetadata {
     static final Map<String, String> ATTRIBUTE_TO_PROPERTY_MAP;
 
     static {
         ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
         ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client", "splunkClient"); // ref
+        ATTRIBUTE_TO_PROPERTY_MAP.put("jms-user-name", "userName"); // ref
+        ATTRIBUTE_TO_PROPERTY_MAP.put("jms-password", "password"); // ref
     }
 
     final SplunkNamespaceHandler namespaceHandler;
     final Logger log = LoggerFactory.getLogger(this.getClassName());
-    List<String> sourceMBeans;
 
     Metadata eventBuilderMetadata;
+    String destinationType = "Queue";
+    String destinationNamePattern = "splunk.*";
 
-    public SplunkJmxNotificationListenerMetadata(SplunkNamespaceHandler namespaceHandler) {
-        super(SplunkJmxNotificationListener.class.getName());
+
+    public SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata(SplunkNamespaceHandler namespaceHandler) {
+        super(SplunkEmbeddedActiveMQMessageConsumerFactory.class.getName());
 
         this.namespaceHandler = namespaceHandler;
     }
@@ -93,6 +95,10 @@ public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBean
                 }
                 answer = BeanPropertyMetadataUtil.create(propertyName, referenceMetadata);
                 break;
+            case "userName":
+            case "password":
+                answer = BeanPropertyMetadataUtil.create(propertyName, propertyValue);
+                break;
              default:
                 // TODO:  Make the message better - include more detail
                 String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - unsupported propertyName", propertyName, propertyValue);
@@ -114,8 +120,12 @@ public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBean
             answer.add(BeanPropertyMetadataUtil.create("splunkClient", referenceMetadata));
         }
 
-        if (sourceMBeans != null && !sourceMBeans.isEmpty()) {
-            answer.add(BeanPropertyMetadataUtil.create("sourceMBeans", ListMetadataUtil.create(sourceMBeans)));
+        if (hasDestinationType()) {
+            answer.add(BeanPropertyMetadataUtil.create("destinationType", destinationType));
+        }
+
+        if (hasDestinationNamePattern()) {
+            answer.add(BeanPropertyMetadataUtil.create("destinationNamePattern", destinationNamePattern));
         }
 
         if (hasEventBuilderMetadata()) {
@@ -125,12 +135,28 @@ public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBean
         return answer;
     }
 
-    public List<String> getSourceMBeans() {
-        return sourceMBeans;
+    public boolean hasDestinationType() {
+        return destinationType != null && !destinationType.isEmpty();
     }
 
-    public void setSourceMBeans(List<String> sourceMBeans) {
-        this.sourceMBeans = sourceMBeans;
+    public String getDestinationType() {
+        return destinationType;
+    }
+
+    public void setDestinationType(String destinationType) {
+        this.destinationType = destinationType;
+    }
+
+    public boolean hasDestinationNamePattern() {
+        return destinationNamePattern != null && !destinationNamePattern.isEmpty();
+    }
+
+    public String getDestinationNamePattern() {
+        return destinationNamePattern;
+    }
+
+    public void setDestinationNamePattern(String destinationNamePattern) {
+        this.destinationNamePattern = destinationNamePattern;
     }
 
     public boolean hasEventBuilderMetadata() {

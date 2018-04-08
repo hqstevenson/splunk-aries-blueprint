@@ -24,7 +24,7 @@ import com.pronoia.aries.blueprint.util.metadata.AbstractBeanMetadata;
 import com.pronoia.aries.blueprint.util.reflect.BeanPropertyMetadataUtil;
 import com.pronoia.aries.blueprint.util.reflect.MapMetadataUtil;
 import com.pronoia.aries.blueprint.util.reflect.ValueMetadataUtil;
-import com.pronoia.splunk.jmx.eventcollector.eventbuilder.JmxNotificationEventBuilder;
+import com.pronoia.splunk.jms.eventbuilder.CamelJmsMessageEventBuilder;
 
 import org.osgi.service.blueprint.container.ComponentDefinitionException;
 import org.osgi.service.blueprint.reflect.BeanProperty;
@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class JmxNotificationEventBuilderMetadata extends AbstractBeanMetadata {
+public abstract class AbstractActiveMqMessageEventBuilderMetadata extends AbstractBeanMetadata {
     static final Map<String, String> ATTRIBUTE_TO_PROPERTY_MAP;
 
     static {
@@ -42,23 +42,30 @@ public class JmxNotificationEventBuilderMetadata extends AbstractBeanMetadata {
         ATTRIBUTE_TO_PROPERTY_MAP.put("source", "defaultSource");
         ATTRIBUTE_TO_PROPERTY_MAP.put("sourcetype", "defaultSourcetype");
 
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-null-attrs", "includeNullAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-attrs", "includeEmptyAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-lists", "includeEmptyLists");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-destination", "includeJmsDestination");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-delivery-mode", "includeJmsDeliveryMode");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-expiration", "includeJmsExpiration");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-priority", "includeJmsPriority");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-message-id", "includeJmsMessageId");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-timestamp", "includeJmsTimestamp");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-correlation-id", "includeJmsCorrelationId");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-reply-to", "includeJmsReplyTo");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-type", "includeJmsType");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-redelivered", "includeJmsRedelivered");
 
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-message", "includeNotificationMessage");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-sequence-number", "includeNotificationSequenceNumber");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-source", "includeNotificationSource");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-type", "includeNotificationType");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-user-data", "includeUserData");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-jms-properties", "includeJmsProperties");
     }
 
     final Logger log = LoggerFactory.getLogger(this.getClassName());
 
     Map<String, String> includedSystemProperties;
 
-    public JmxNotificationEventBuilderMetadata() {
-        super(JmxNotificationEventBuilder.class.getName());
+    protected AbstractActiveMqMessageEventBuilderMetadata(Class eventBuilderClass) {
+        super(eventBuilderClass.getName());
+    }
+
+    public AbstractActiveMqMessageEventBuilderMetadata() {
+        super(CamelJmsMessageEventBuilder.class.getName());
     }
 
     @Override
@@ -92,15 +99,17 @@ public class JmxNotificationEventBuilderMetadata extends AbstractBeanMetadata {
             case "defaultSourcetype":
                 answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(String.class, propertyValue));
                 break;
-            case "includeNullAttrs":
-            case "includeEmptyAttrs":
-            case "includeZeroAttrs":
-            case "includeEmptyLists":
-            case "includeNotificationMessage":
-            case "includeNotificationSequenceNumber":
-            case "includeNotificationSource":
-            case "includeNotificationType":
-            case "includeUserData":
+            case "includeJmsDestination":
+            case "includeJmsDeliveryMode":
+            case "includeJmsExpiration":
+            case "includeJmsPriority":
+            case "includeJmsMessageId":
+            case "includeJmsTimestamp":
+            case "includeJmsCorrelationId":
+            case "includeJmsReplyTo":
+            case "includeJmsType":
+            case "includeJmsRedelivered":
+            case "includeJmsProperties":
                 answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(Boolean.class, propertyValue));
                 break;
             default:

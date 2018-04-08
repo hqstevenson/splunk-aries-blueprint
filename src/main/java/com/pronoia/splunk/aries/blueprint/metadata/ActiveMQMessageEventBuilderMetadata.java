@@ -14,27 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pronoia.splunk.aries.blueprint.converter;
+package com.pronoia.splunk.aries.blueprint.metadata;
 
-import com.pronoia.splunk.eventcollector.EventBuilder;
-
-import org.osgi.service.blueprint.container.Converter;
-import org.osgi.service.blueprint.container.ReifiedType;
+import com.pronoia.splunk.jms.eventbuilder.CamelJmsMessageEventBuilder;
 
 
-/**
- * Simple Blueprint Type {@link Converter} to for {@link EventBuilder}s.
- *
- * This can be useful in older OSGi/Blueprint implementations that don't handle Java Generics as well.
- */
-public class EventBuilderConverter implements Converter {
-    @Override
-    public boolean canConvert(Object sourceObject, ReifiedType targetType) {
-        return sourceObject instanceof EventBuilder && targetType.getRawClass() == EventBuilder.class;
+public class ActiveMQMessageEventBuilderMetadata extends AbstractActiveMqMessageEventBuilderMetadata {
+
+    public ActiveMQMessageEventBuilderMetadata() {
+        super(CamelJmsMessageEventBuilder.class);
     }
 
-    @Override
-    public Object convert(Object sourceObject, ReifiedType targetType) throws Exception {
-        return sourceObject;
-    }
 }

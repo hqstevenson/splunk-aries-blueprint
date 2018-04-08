@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,10 @@
  */
 package com.pronoia.splunk.aries.blueprint.metadata;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.pronoia.aries.blueprint.util.metadata.AbstractBeanMetadata;
 
 import com.pronoia.aries.blueprint.util.reflect.BeanPropertyMetadataUtil;
@@ -24,10 +28,6 @@ import com.pronoia.aries.blueprint.util.reflect.MapMetadataUtil;
 import com.pronoia.aries.blueprint.util.reflect.ValueMetadataUtil;
 
 import com.pronoia.splunk.jmx.eventcollector.eventbuilder.JmxAttributeListEventBuilder;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.osgi.service.blueprint.container.ComponentDefinitionException;
 import org.osgi.service.blueprint.reflect.BeanProperty;

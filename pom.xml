@@ -23,7 +23,7 @@
     <groupId>com.github.hqstevenson.splunk</groupId>
     <artifactId>splunk.aries.blueprint</artifactId>
     <packaging>bundle</packaging>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 
     <name>Splunk Blueprint Support (Apache Aries)</name>
     <description>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms.activemq</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
             <optional>true</optional>
         </dependency>
 

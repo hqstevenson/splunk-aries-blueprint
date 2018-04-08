@@ -21,32 +21,32 @@ import java.util.Map;
 
 import com.pronoia.aries.blueprint.util.namespace.AbstractElementHandler;
 import com.pronoia.aries.blueprint.util.parser.ElementParser;
-
-import com.pronoia.splunk.aries.blueprint.metadata.JmxNotificationEventBuilderMetadata;
-import com.pronoia.splunk.aries.blueprint.metadata.SplunkJmxNotificationListenerMetadata;
+import com.pronoia.splunk.aries.blueprint.metadata.ActiveMQMessageEventBuilderMetadata;
+import com.pronoia.splunk.aries.blueprint.metadata.SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata;
 import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
 
 import org.osgi.service.blueprint.reflect.Metadata;
 
 
-public class SplunkJmxNotificationListenerElementHandler extends AbstractElementHandler {
-    public SplunkJmxNotificationListenerElementHandler(SplunkNamespaceHandler namespaceHandler, String elementTagName) {
+public class SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler extends AbstractElementHandler {
+    public SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler(SplunkNamespaceHandler namespaceHandler, String elementTagName) {
         super(namespaceHandler, elementTagName);
     }
 
     @Override
     public Metadata createMetadata(ElementParser handledElementParser) {
-        SplunkJmxNotificationListenerMetadata answer = new SplunkJmxNotificationListenerMetadata(getNamespaceHandler());
+        SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata answer = new SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata(getNamespaceHandler());
 
         Map<String, String> attributeValueMap = handledElementParser.getAttributeValueMap();
         answer.setAttributes(handledElementParser.getAttributeValueMap(), true);
 
-        List<String> observedObjects = handledElementParser.getElementValues("source-mbean", true);
-        answer.setSourceMBeans(observedObjects);
+        ElementParser destinationPattern = handledElementParser.getElement("destination-pattern", true);
+        answer.setDestinationNamePattern(destinationPattern.getValue(true));
+        answer.setDestinationType(destinationPattern.getAttribute("destination-type", true));
 
         ElementParser splunkEventConfigurationElement = handledElementParser.getElement("splunk-event");
         if (splunkEventConfigurationElement != null) {
-            JmxNotificationEventBuilderMetadata eventBuilderMetadata = new JmxNotificationEventBuilderMetadata();
+            ActiveMQMessageEventBuilderMetadata eventBuilderMetadata = new ActiveMQMessageEventBuilderMetadata();
 
             eventBuilderMetadata.setAttributes(splunkEventConfigurationElement.getAttributeValueMap(), true);
 

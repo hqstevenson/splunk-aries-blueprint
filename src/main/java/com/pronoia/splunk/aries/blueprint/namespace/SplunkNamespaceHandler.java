@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,8 @@ package com.pronoia.splunk.aries.blueprint.namespace;
 import com.pronoia.aries.blueprint.util.namespace.AbstractNamespaceHandler;
 
 import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkClientElementHandler;
+import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkEmbeddedActiveMqAdvisoryMessageConsumerFactoryElementHandler;
+import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler;
 import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkJmxAttributeChangeMonitorElementHandler;
 import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkJmxNotificationListenerElementHandler;
 
@@ -35,6 +37,8 @@ public class SplunkNamespaceHandler extends AbstractNamespaceHandler {
         addElementHandler(new SplunkClientElementHandler(this, "splunk-client"));
         addElementHandler(new SplunkJmxAttributeChangeMonitorElementHandler(this, "splunk-jmx-attribute-change-monitor"));
         addElementHandler(new SplunkJmxNotificationListenerElementHandler(this, "splunk-jmx-notification-listener"));
+        addElementHandler(new SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler(this, "splunk-embedded-activemq-message-consumer-factory"));
+        addElementHandler(new SplunkEmbeddedActiveMqAdvisoryMessageConsumerFactoryElementHandler(this, "splunk-embedded-activemq-advisory-message-consumer-factory"));
     }
 
     @Override

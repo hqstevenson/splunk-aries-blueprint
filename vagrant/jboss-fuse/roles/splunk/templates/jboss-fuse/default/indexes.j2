@@ -1,0 +1,23 @@
+[{{ splunk_jboss_fuse_logs_index }}]
+coldPath = $SPLUNK_DB/{{ splunk_jboss_fuse_logs_index }}/colddb
+enableDataIntegrityControl = 0
+enableTsidxReduction = 0
+homePath = $SPLUNK_DB/{{ splunk_jboss_fuse_logs_index }}/db
+maxTotalDataSizeMB = 512000
+thawedPath = $SPLUNK_DB/{{ splunk_jboss_fuse_logs_index }}/thaweddb
+
+[{{ splunk_jboss_fuse_jmx_index }}]
+coldPath = $SPLUNK_DB/{{ splunk_jboss_fuse_jmx_index }}/colddb
+enableDataIntegrityControl = 0
+enableTsidxReduction = 0
+homePath = $SPLUNK_DB/{{ splunk_jboss_fuse_jmx_index }}/db
+maxTotalDataSizeMB = 512000
+thawedPath = $SPLUNK_DB/{{ splunk_jboss_fuse_jmx_index }}/thaweddb
+
+[{{ splunk_jboss_fuse_jms_index }}]
+coldPath = $SPLUNK_DB/{{ splunk_jboss_fuse_jms_index }}/colddb
+enableDataIntegrityControl = 0
+enableTsidxReduction = 0
+homePath = $SPLUNK_DB/{{ splunk_jboss_fuse_jms_index }}/db
+maxTotalDataSizeMB = 512000
+thawedPath = $SPLUNK_DB/{{ splunk_jboss_fuse_jms_index }}/thaweddb

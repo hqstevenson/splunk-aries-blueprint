@@ -1,0 +1,31 @@
+---
+- name: Create child containers
+  command: '{{ jboss_fuse_client }} "fabric:container-create-child --profile container-{{ item.profile }} --profile splunk-karaf_jmx {{ karaf_root_container_name }} {{ item.container }}"'
+  args:
+    creates: '{{ jboss_fuse_home }}/instances/{{ item.container }}'
+  with_items:
+    - container: activemq-inbound
+      profile: activemq_inbound
+    - container: activemq-outbound
+      profile: activemq_outbound
+    - container: camel-inbound
+      profile: camel_inbound
+    - container: camel-outbound
+      profile: camel_outbound
+    - container: camel-translation
+      profile: camel_translation
+
+- name: Assign Splunk ActiveMQ-JMX and ActiveMQ-JMS profiles to all ActiveMQ containers
+  command: '{{ jboss_fuse_client }} "fabric:container-add-profile {{ item }} splunk-activemq_jmx splunk-activemq_jms"'
+  with_items:
+    - activemq-inbound
+    - activemq-outbound
+
+- name: Assign Splunk Camel-JMX profile to all Camel containers
+  command: '{{ jboss_fuse_client }} "fabric:container-add-profile {{ item }} splunk-camel_jmx"'
+  with_items:
+    - camel-inbound
+    - camel-outbound
+    - camel-translation
+
+...

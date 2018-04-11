@@ -1,0 +1,1 @@
+Place the JBoss Fuse installation archive (zip) in this directory.

@@ -1,0 +1,75 @@
+---
+- name: Install Splunk RPM
+  copy:
+    src: '{{ item }}'
+    dest: /tmp/splunk.rpm
+  with_fileglob:
+    - files/splunk-*.rpm
+
+- name: Install Splunk RPM
+  yum:
+    name: /tmp/splunk.rpm
+    state: present
+  with_fileglob:
+    - files/splunk-*.rpm
+
+- name: Add the vagrant user to the splunk group
+  user:
+    name: vagrant
+    groups: '{{ splunk_group }}'
+    append: yes
+
+- block:
+  # Configure the Splunk HTTP Event Collector
+  - name: Create the local configuration directory for the Splunk HTTP Event Collector
+    file:
+      path: '{{ splunk_apps_dir }}/splunk_httpinput/local'
+      state: directory
+      owner: '{{ splunk_user }}'
+      group: '{{ splunk_group }}'
+
+  - name: Configure the Splunk HTTP Event Collector
+    template:
+      src: splunk_httpinput/inputs.j2
+      dest: '{{ splunk_apps_dir }}/splunk_httpinput/local/inputs.conf'
+      owner: '{{ splunk_user }}'
+      group: '{{ splunk_group }}'
+
+- block:
+  # Configure the JBoss Fuse Splunk App
+  - name: Create directories for the JBoss Fuse Splunk App
+    file:
+      path: '{{ splunk_apps_dir }}/jboss-fuse/{{ item }}'
+      state: directory
+      owner: '{{ splunk_user }}'
+      group: '{{ splunk_group }}'
+    with_items:
+      - default
+      - local
+
+  - name: Configure defaults for the JBoss Fuse Splunk App
+    template:
+      src: jboss-fuse/{{ item }}.j2
+      dest: '{{ splunk_apps_dir }}/jboss-fuse/{{ item }}.conf'
+      owner: '{{ splunk_user }}'
+      group: '{{ splunk_group }}'
+      backup: yes
+    with_items:
+      - default/app
+      - default/fields
+      - default/indexes
+      - default/inputs
+      - default/props
+      - default/transforms
+      - local/inputs
+
+- name: Setup Splunk as a system service
+  command: '{{ splunk_home }}/bin/splunk --accept-license enable boot-start -user {{ splunk_user }}'
+  args:
+    creates: /etc/init.d/splunk
+
+- name: Start Splunk
+  service:
+    name: splunk
+    state: started
+...

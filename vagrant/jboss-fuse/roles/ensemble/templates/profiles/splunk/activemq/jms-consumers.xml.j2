@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <!--
+        This isn't needed for JBoss Fuse 6.3
+        <type-converters>
+            <bean id="event-builder-converter" class="com.pronoia.splunk.aries.blueprint.converter.EventBuilderConverter" />
+        </type-converters>
+     -->
+
+    <splunk-embedded-activemq-message-consumer-factory id="splunk-audit-queue-consumers" xmlns="urn:pronoia.com/schema/blueprint/splunk">
+        <destination-pattern destination-type="Queue">splunk.audit*</destination-pattern>
+        <splunk-event index="jboss-fuse-jms" sourcetype="activemq-queue" >
+            <system-property property="karaf.name" field="container" />
+        </splunk-event>
+    </splunk-embedded-activemq-message-consumer-factory>
+
+    <splunk-embedded-activemq-advisory-message-consumer-factory id="splunk-advisory-queue-consumers" xmlns="urn:pronoia.com/schema/blueprint/splunk">
+        <destination-pattern destination-type="Queue">splunk.advisory*</destination-pattern>
+        <splunk-event index="jboss-fuse-jms" sourcetype="activemq-advisory" >
+            <system-property property="karaf.name" field="container" />
+        </splunk-event>
+    </splunk-embedded-activemq-advisory-message-consumer-factory>
+
+</blueprint>

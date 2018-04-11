@@ -1,0 +1,49 @@
+= JBoss Fuse Local Development Environment
+
+This Vagrant project is designed to standardize and simplify the creation of 'local' JBoss Fuse Environments for development use.  The
+installation and configuration is modeled after a common development environment architecture.
+
+This Vagrant project will install JBoss Fuse 6.3 Update 4 and Splunk 7 into a new CentOS 7 VirtualBox VM, and the VM options
+can be configured in the Vagrantfile.
+
+.VM Options
+ - CPU count
+ - Memory
+ - Port Mappings
+ - Shared Directories
+
+The CentOS VM is configured as a simplified version of a shared JBoss Fuse Development environment.  It is NOT an exact replica and may
+not have all of the same utilities installed.
+
+Both Splunk and the root container of the JBoss Fuse installation will be configured to start when the VM starts.
+
+The JBoss Fuse Environment is configured with a simplfied set of Fabric8 Profiles tuned for the local development environment.  The profiles
+can be reviewed/customized in the "ensemble" Ansible Role (ensemble/files/profiles/...).
+
+The Splunk Environment is configured to index the logs from the JBoss Fuse Containers into the 'jboss-fuse' index.
+
+The vagrant-playbook.yml Ansible playbook can be modified to add/removed components from the VM.  For example, the
+installation of Splunk can be disable by commenting-out the Splunk Role in the playbook.
+
+.PREREQUISITES:
+ - VirtualBox and the VirtualBox Extension Pack ( https://www.virtualbox.org/wiki/Downloads )
+ - Vagrant ( https://www.vagrantup.com/downloads.html )
+ - The vagrant-vbguest plugin is needed for the .m2/repository share to work ( https://github.com/dotless-de/vagrant-vbguest ).
+ - Ansible ( http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html )
+
+.USAGE:
+ 1. Copy the jboss-fuse-karaf-6.3.0.redhat-283.zip installation to this directory
+ 2. Copy the splunk-7.0.3-fa31da744b51-linux-2.6-x86_64.rpm to this directory
+ 3. Use Vagrant to build the VM (vagrant up)
+
+.NOTES:
+ - Executing 'vagrant ssh' in the project directory will open an SSH session with the VM as the 'vagrant' user.
+
+ - Executing 'vagrant destroy -f && vagrant up' will re-create the environment.
+
+ - The Ansible playbook only supports a specific version for both the JBoss Fuse and Splunk installations, and the
+ Ansible global_vars/all.yml file must be modified if/when that version changes.
+
+ - In order to use Java libraries that are not deployed to the shared Maven repository (i.e. locally-built libraries), the
+ ~/.m2/repository directory must be shared with shared with the fuse user and mounted/linked at the appropiate location (i.e. ~fuse/.m2/repository).
+

@@ -1,0 +1,45 @@
+---
+- name: JBoss Fuse Local Environment
+  hosts: all
+
+  pre_tasks:
+    - name: Install Java and utilities
+      yum:
+        name:  '{{ item }}'
+        state: present
+      with_items:
+        - bind-utils
+        - java-1.8.0-openjdk-devel
+        - net-tools
+        - tree
+        - unzip
+        - wget
+
+    - name: Add JAVA_HOME to the system bashrc file
+      lineinfile:
+        path: /etc/bashrc
+        regexp: '^JAVA_HOME=.*'
+        line: export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
+
+  roles:
+    - jboss-fuse
+    - splunk
+    - ensemble
+    - ensemble-containers
+
+  tasks:
+    - name: Create symlink to the JBoss Fuse logs directory for the Vagrant user
+      file:
+        src: '{{ jboss_fuse_log_path }}'
+        dest: /home/vagrant/logs
+        state: link
+        owner: vagrant
+
+    - name: Add an alias for the JBoss Fuse client command for the Vagrant User
+      lineinfile:
+        path: /home/vagrant/.bashrc
+        regexp: '^alias\s+client="sudo\s+-u\s+{{ jboss_fuse_user }}"\s*'
+        line: alias client='sudo -u {{ jboss_fuse_user }} {{ jboss_fuse_home }}/bin/client'
+
+
+...

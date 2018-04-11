@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <!-- This isn't needed for JBoss Fuse 6.3
+        <type-converters>
+            <bean id="event-builder-converter" class="com.pronoia.splunk.aries.blueprint.converter.EventBuilderConverter" />
+        </type-converters>
+     -->
+
+    <splunk-jmx-attribute-change-monitor id="splunk-jvm-thread-statistics" xmlns="urn:pronoia.com/schema/blueprint/splunk"
+                                         granularity-period="5" max-suppressed-duplicate-events="6">
+        <observed-object>java.lang:type=Threading</observed-object>
+        <observed-attributes>
+            <attribute>DaemonThreadCount</attribute>
+            <attribute>PeakThreadCount</attribute>
+            <attribute>ThreadCount</attribute>
+            <attribute>TotalStartedThreadCount</attribute>
+        </observed-attributes>
+        <splunk-event index="{{ splunk_jboss_fuse_jmx_index }}" sourcetype="jvm-thread-statistics" >
+            <system-property property="karaf.name" field="container" />
+        </splunk-event>
+    </splunk-jmx-attribute-change-monitor>
+
+    <splunk-jmx-attribute-change-monitor id="splunk-jvm-memory-statistics"  xmlns="urn:pronoia.com/schema/blueprint/splunk"
+                                         granularity-period="15" max-suppressed-duplicate-events="6">
+        <observed-object>java.lang:type=Memory</observed-object>
+        <observed-attributes>
+            <attribute>HeapMemoryUsage</attribute>
+            <attribute>NonHeapMemoryUsage</attribute>
+        </observed-attributes>
+        <splunk-event index="{{ splunk_jboss_fuse_jmx_index }}" sourcetype="jvm-memory-statistics" >
+            <system-property property="karaf.name" field="container" />
+        </splunk-event>
+    </splunk-jmx-attribute-change-monitor>
+
+</blueprint>

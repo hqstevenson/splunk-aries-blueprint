@@ -1,0 +1,112 @@
+<beans xmlns="http://www.springframework.org/schema/beans">
+
+    <!-- Allows us to use system properties and fabric as variables in this configuration file -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties">
+            <bean class="io.fabric8.mq.fabric.ConfigurationProperties"/>
+        </property>
+    </bean>
+
+    <broker xmlns="http://activemq.apache.org/schema/core"
+            brokerName="${broker-name}" dataDirectory="${data}/inbound" start="false" restartAllowed="false">
+
+        <destinationPolicy>
+            <policyMap>
+                <policyEntries>
+                    <policyEntry topic=">" producerFlowControl="true">
+                        <pendingMessageLimitStrategy>
+                            <constantPendingMessageLimitStrategy limit="1000"/>
+                        </pendingMessageLimitStrategy>
+                    </policyEntry>
+                    <policyEntry queue="splunk.>" producerFlowControl="false" queuePrefetch="1" maxPageSize="10"/>
+                    <policyEntry queue="in.>" producerFlowControl="true" advisoryForDelivery="true" advisoryForConsumed="true" queuePrefetch="1" maxPageSize="10">
+                        <deadLetterStrategy>
+                            <individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
+                        </deadLetterStrategy>
+                    </policyEntry>
+                    <policyEntry queue="vt.in.>" producerFlowControl="true" advisoryForDelivery="false" advisoryForConsumed="true" queuePrefetch="1" maxPageSize="10">
+                        <deadLetterStrategy>
+                            <individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
+                        </deadLetterStrategy>
+                    </policyEntry>
+                    <policyEntry topic="vt.in.>" producerFlowControl="true" advisoryForDelivery="true" advisoryForConsumed="false" queuePrefetch="1" maxPageSize="10">
+                        <deadLetterStrategy>
+                            <individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
+                        </deadLetterStrategy>
+                    </policyEntry>
+                </policyEntries>
+            </policyMap>
+        </destinationPolicy>
+
+        <destinationInterceptors>
+            <virtualDestinationInterceptor>
+                <virtualDestinations>
+                    <virtualTopic name="vt.>" prefix="" postfix=".*"/>
+                    <compositeQueue name="in.>" forwardOnly="false">
+                        <forwardTo>
+                            <queue physicalName="splunk.audit.message"/>
+                        </forwardTo>
+                    </compositeQueue>
+                    <compositeTopic name="vt.in.>" forwardOnly="false">
+                        <forwardTo>
+                            <queue physicalName="splunk.audit.vt-message"/>
+                        </forwardTo>
+                    </compositeTopic>
+                    <compositeTopic name="ActiveMQ.Advisory.MessageDelivered.Queue.in.>" forwardOnly="false">
+                        <forwardTo>
+                            <queue physicalName="splunk.advisory.message-delivered"/>
+                        </forwardTo>
+                    </compositeTopic>
+                    <compositeTopic name="ActiveMQ.Advisory.MessageConsumed.Queue.in.>" forwardOnly="false">
+                        <forwardTo>
+                            <queue physicalName="splunk.advisory.message-consumed"/>
+                        </forwardTo>
+                    </compositeTopic>
+                    <compositeTopic name="ActiveMQ.Advisory.MessageDelivered.Topic.vt.in.>" forwardOnly="false">
+                        <forwardTo>
+                            <queue physicalName="splunk.advisory.vt-message-delivered"/>
+                        </forwardTo>
+                    </compositeTopic>
+                    <compositeTopic name="ActiveMQ.Advisory.MessageConsumed.Queue.vt.in.>" forwardOnly="false">
+                        <forwardTo>
+                            <queue physicalName="splunk.advisory.vt-message-consumed"/>
+                        </forwardTo>
+                    </compositeTopic>
+                </virtualDestinations>
+            </virtualDestinationInterceptor>
+        </destinationInterceptors>
+
+        <managementContext>
+            <managementContext createConnector="false"/>
+        </managementContext>
+
+        <persistenceAdapter>
+            <kahaDB directory="${data}/inbound/${broker-name}"/>
+        </persistenceAdapter>
+
+        <plugins>
+            <jaasAuthenticationPlugin configuration="karaf"/>
+            <bean id="vmAuthPlugin" xmlns="http://www.springframework.org/schema/beans" class="com.pronoia.splunk.jms.activemq.util.VmAuthenticationPlugin" />
+        </plugins>
+
+        <systemUsage>
+            <systemUsage sendFailIfNoSpace="true">
+                <memoryUsage>
+                    <memoryUsage percentOfJvmHeap="80"/>
+                </memoryUsage>
+                <storeUsage>
+                    <storeUsage limit="80 gb"/>
+                </storeUsage>
+                <tempUsage>
+                    <tempUsage limit="50 gb"/>
+                </tempUsage>
+            </systemUsage>
+        </systemUsage>
+
+        <transportConnectors>
+            <transportConnector name="openwire" uri="tcp://${bindAddress}:${bindPort}"/>
+        </transportConnectors>
+    </broker>
+
+</beans>
+

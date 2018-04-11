@@ -1,0 +1,3 @@
+---
+jboss_fuse_client: '{{ jboss_fuse_home }}/bin/client'
+...

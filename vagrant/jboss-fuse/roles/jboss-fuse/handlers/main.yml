@@ -1,0 +1,6 @@
+---
+- name: Restart JBoss Fuse
+  service:
+    name: jboss-fuse
+    state: restarted
+...

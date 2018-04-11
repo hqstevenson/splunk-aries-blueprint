@@ -1,0 +1,8 @@
+This directory contains Vagrant projects to support building development environment containing JBoss Fuse and Splunk.
+
+The centos-base project will build a base Vagrant Box that can then be used to accelerate the creation of development environments.  It's usage is optional.
+Vagrant configuration to build a base box for JBoss Fuse Development environments.
+The base box contains the VirtualBox tools, OpenJDK and some system utilities.  It is designed to make the provisioning of new
+JBoss Fuse development environments much quicker.
+
+The jboss-fuse project will build a development environment containing JBoss Fuse and Splunk.

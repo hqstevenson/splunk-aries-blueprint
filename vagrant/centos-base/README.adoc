@@ -1,0 +1,11 @@
+Vagrant configuration to build a base box for JBoss Fuse Development environments.
+
+The base box contains the VirtualBox tools, OpenJDK and some system utilities.  It is designed to make the provisioning of new
+JBoss Fuse development environments much quicker.
+
+.USAGE
+- vagrant up
+- vagrant package
+- vagrant box add --name centos-base package.box
+- rm package.box
+- vagrant destroy -f

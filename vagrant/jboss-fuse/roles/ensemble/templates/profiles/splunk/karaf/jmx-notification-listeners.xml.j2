@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <!-- This isn't needed for JBoss Fuse 6.3
+        <type-converters>
+            <bean id="event-builder-converter" class="com.pronoia.splunk.aries.blueprint.converter.EventBuilderConverter" />
+        </type-converters>
+     -->
+
+    <splunk-jmx-notification-listener id="splunk-gc-notification-listener" xmlns="urn:pronoia.com/schema/blueprint/splunk">
+        <source-mbean>java.lang:type=GarbageCollector,name=*</source-mbean>
+        <splunk-event index="{{ splunk_jboss_fuse_jmx_index }}" sourcetype="karaf-jdk-gc" >
+            <system-property property="karaf.name" field="container" />
+        </splunk-event>
+    </splunk-jmx-notification-listener>
+
+</blueprint>

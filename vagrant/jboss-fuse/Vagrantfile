@@ -1,0 +1,35 @@
+Vagrant.configure('2') do |config|
+
+  # Use the centos-base box if it exists
+  if File.exists? File.expand_path('~/.vagrant.d/boxes/centos-base')
+    config.vm.box = 'centos-base'
+  else
+    config.vm.box = 'centos/7'
+  end
+
+  config.vm.hostname = 'jboss-fuse'
+
+  # Map the Fuse Management Console
+  config.vm.network "forwarded_port", guest: 4010, host: 4000
+
+  # Map the Splunk UI
+  config.vm.network "forwarded_port", guest: 8000, host: 4800
+
+  # OPTIONAL - This will allow the VM to use your local Maven repository
+  # NOTE - the vagrant-vbguest plugin will be requried if the VirtualBox tools are not already install in the VM
+  config.vm.synced_folder '~/.m2', '/home/vagrant/.m2'
+
+  config.vm.define 'jboss-fuse'
+  config.vm.provider 'virtualbox' do |v|
+    v.name = 'JBoss Fuse Development'
+    v.cpus = 2
+    v.memory = 4096
+  end
+
+  config.vm.provision 'ansible_local' do |ansible|
+    ansible.compatibility_mode = '2.0'
+    ansible.playbook = 'jboss-fuse-playbook.yml'
+    ansible.become = true
+  end
+
+end

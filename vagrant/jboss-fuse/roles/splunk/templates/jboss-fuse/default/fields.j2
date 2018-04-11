@@ -1,0 +1,76 @@
+# Common Indexed Fields
+[container]
+INDEXED = true
+INDEXED_VALUE = false
+
+
+
+# Indexed Fields from logs
+[sourcefile]
+INDEXED = true
+INDEXED_VALUE = false
+
+
+
+# Indexed Fields from JMS Headers
+[JMSDeliveryMode]
+INDEXED = true
+INDEXED_VALUE = false
+
+[JMSDestination]
+INDEXED = true
+INDEXED_VALUE = false
+
+[JMSMessageID]
+INDEXED = true
+INDEXED_VALUE = false
+
+[JMSRedelivered]
+INDEXED = true
+INDEXED_VALUE = false
+
+[JMSTimestamp]
+INDEXED = true
+INDEXED_VALUE = false
+
+[JMSType]
+INDEXED = true
+INDEXED_VALUE = false
+
+
+
+# Indexed Fields from ActiveMQ Advisory Messages
+[originBrokerId]
+INDEXED = true
+INDEXED_VALUE = false
+
+[originBrokerName]
+INDEXED = true
+INDEXED_VALUE = false
+
+[originBrokerURL]
+INDEXED = true
+INDEXED_VALUE = false
+
+[orignalBrokerInTime] # This field is misspelled - that's the way ActiveMQ sends it
+INDEXED = true
+INDEXED_VALUE = false
+
+[orignalBrokerOutTime] # This field is misspelled - that's the way ActiveMQ sends it
+INDEXED = true
+INDEXED_VALUE = false
+
+[orignalDestination] # This field is misspelled - that's the way ActiveMQ sends it
+INDEXED = true
+INDEXED_VALUE = false
+
+[orignalMessageId] # This field is misspelled - that's the way ActiveMQ sends it
+INDEXED = true
+INDEXED_VALUE = false
+
+
+
+# Indexed Fields from Camel JMS Messages
+[breadcrumbId]
+INDEXED = true
+INDEXED_VALUE = false

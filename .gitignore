@@ -1,18 +1,23 @@
-*.class
-.idea
+# Maven #
+target
+
+# IntelliJ #
+.idea/
 *.iml
 
-target/
+# Vagrant #
+.vagrant
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Ansible #
+*.retry
 
-# Package Files #
+# Archives #
 *.jar
 *.war
 *.ear
-*.rpm
 *.zip
+*.tgz
+*.tar.gz
+*.rar
+*.rpm
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*

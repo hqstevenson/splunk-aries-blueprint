@@ -4,8 +4,11 @@ jboss_fuse_user: fuse
 
 jboss_fuse_home: /opt/{{ jboss_fuse_id }}
 jboss_fuse_log_path: '{{ jboss_fuse_home }}/log'
+jboss_fuse_client: '{{ jboss_fuse_home }}/bin/client'
 
 karaf_root_container_name: ensemble
+
+fabric_restart_sleep_time: 30
 
 splunk_home: /opt/splunk
 splunk_jboss_fuse_logs_index: '{{ jboss_fuse_id }}'

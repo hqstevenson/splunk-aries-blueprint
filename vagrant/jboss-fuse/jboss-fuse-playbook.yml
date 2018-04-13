@@ -18,14 +18,14 @@
     - name: Add JAVA_HOME to the system bashrc file
       lineinfile:
         path: /etc/bashrc
-        regexp: '^JAVA_HOME=.*'
+        regexp: '^export\+JAVA_HOME=.*'
         line: export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
 
   roles:
-    - jboss-fuse
     - splunk
+    - jboss-fuse
     - ensemble
-    - ensemble-containers
+#    - ensemble-containers
 
   tasks:
     - name: Create symlink to the JBoss Fuse logs directory for the Vagrant user

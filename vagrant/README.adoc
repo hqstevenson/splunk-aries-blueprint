@@ -6,3 +6,11 @@ The base box contains the VirtualBox tools, OpenJDK and some system utilities.  
 JBoss Fuse development environments much quicker.
 
 The jboss-fuse project will build a development environment containing JBoss Fuse and Splunk.
+
+.PREREQUISITES:
+ - VirtualBox and the VirtualBox Extension Pack ( https://www.virtualbox.org/wiki/Downloads )
+ - Vagrant ( https://www.vagrantup.com/downloads.html )
+ - The vagrant-vbguest plugin is needed for the .m2/repository share to work ( https://github.com/dotless-de/vagrant-vbguest ).
+ - Ansible ( http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html )
+ - Copy the JBoss Fuse installation archive to this directory
+ - Copy the Splunk installation RPM to this directory

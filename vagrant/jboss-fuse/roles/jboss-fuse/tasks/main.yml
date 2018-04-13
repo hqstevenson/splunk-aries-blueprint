@@ -92,10 +92,10 @@
   with_items:
     - property: karaf.name
       value: '{{ karaf_root_container_name }}'
-    - property: profiles
-      value: container-ensemble
     - property: org.osgi.service.http.port
       value: '{{ jboss_fuse_root_container_ports.http }}'
+    - property: profiles
+      value: container-ensemble
 
 - name: Configure etc/org.ops4j.pax.web.cfg
   ini_file:
@@ -163,4 +163,9 @@
   service:
     name: jboss-fuse
     state: started
+
+# Need to find a better way to do this
+- name: Pause to allow the OSGi framework startup to complete
+  pause:
+    seconds: '{{ fabric_restart_sleep_time }}'
 ...

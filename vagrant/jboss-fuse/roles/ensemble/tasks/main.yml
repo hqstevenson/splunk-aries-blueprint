@@ -64,14 +64,14 @@
 
 - name: Configure the Splunk HTTP Client profile
   template:
-    src: profiles/splunk/default-client.xml.j2
+    src: profiles/splunk/default-client-template.xml
     dest: '{{ jboss_fuse_home }}/fabric/import/fabric/profiles/splunk/default_client.profile/default-client.xml'
     owner: '{{ jboss_fuse_user }}'
     group: '{{ jboss_fuse_group }}'
 
 - name: Configure the Splunk Karaf JMX profile
   template:
-    src: profiles/splunk/karaf/{{ item }}.xml.j2
+    src: profiles/splunk/karaf/{{ item }}-template.xml
     dest: '{{ jboss_fuse_home }}/fabric/import/fabric/profiles/splunk/karaf_jmx.profile/{{ item }}.xml'
     owner: '{{ jboss_fuse_user }}'
     group: '{{ jboss_fuse_group }}'
@@ -81,7 +81,7 @@
 
 - name: Configure the Splunk ActiveMQ JMX profile
   template:
-    src: profiles/splunk/activemq/{{ item }}.xml.j2
+    src: profiles/splunk/activemq/{{ item }}-template.xml
     dest: '{{ jboss_fuse_home }}/fabric/import/fabric/profiles/splunk/activemq_jmx.profile/{{ item }}.xml'
     owner: '{{ jboss_fuse_user }}'
     group: '{{ jboss_fuse_group }}'
@@ -90,7 +90,7 @@
 
 - name: Configure the Splunk ActiveMQ JMS profile
   template:
-    src: profiles/splunk/activemq/{{ item }}.xml.j2
+    src: profiles/splunk/activemq/{{ item }}-template.xml
     dest: '{{ jboss_fuse_home }}/fabric/import/fabric/profiles/splunk/activemq_jms.profile/{{ item }}.xml'
     owner: '{{ jboss_fuse_user }}'
     group: '{{ jboss_fuse_group }}'
@@ -99,7 +99,7 @@
 
 - name: Configure the Splunk Camel JMX profile
   template:
-    src: profiles/splunk/camel/{{ item }}.xml.j2
+    src: profiles/splunk/camel/{{ item }}-template.xml
     dest: '{{ jboss_fuse_home }}/fabric/import/fabric/profiles/splunk/camel_jmx.profile/{{ item }}.xml'
     owner: '{{ jboss_fuse_user }}'
     group: '{{ jboss_fuse_group }}'
@@ -111,17 +111,23 @@
   args:
     creates: '{{ jboss_fuse_home }}/data/zookeeper'
 
-
 - name: Pause for the Fabric8 initialization
   pause:
     seconds: 30
+
+- name: Assign the Splunk Karaf-JMX profile to the ensemble container
+  command: '{{ jboss_fuse_client }} "fabric:container-add-profile ensemble splunk-karaf_jmx"'
+
+- name: Pause for the internal restart of the container because of the profile update
+  pause:
+    seconds: '{{ fabric_restart_sleep_time }}'
 
 - name: Restart JBoss Fuse
   service:
     name: '{{ jboss_fuse_id }}'
     state: restarted
 
-- name: Pause while the root container is restarting
+- name: Pause for the Fabric8 initialization after the restart
   pause:
-    seconds: 30
+    seconds: '{{ fabric_restart_sleep_time }}'
 ...

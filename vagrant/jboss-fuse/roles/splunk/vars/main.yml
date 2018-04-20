@@ -1,5 +1,0 @@
----
-splunk_apps_dir: '{{ splunk_home }}/etc/apps'
-splunk_user: splunk
-splunk_group: splunk
-...

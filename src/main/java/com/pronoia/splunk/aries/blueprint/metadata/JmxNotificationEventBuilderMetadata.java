@@ -44,7 +44,7 @@ public class JmxNotificationEventBuilderMetadata extends AbstractBeanMetadata {
 
         ATTRIBUTE_TO_PROPERTY_MAP.put("include-null-attrs", "includeNullAttributes");
         ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-attrs", "includeEmptyAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-lists", "includeEmptyLists");
+        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-lists", "includeEmptyObjectNameLists");
 
         ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-message", "includeNotificationMessage");
         ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-sequence-number", "includeNotificationSequenceNumber");
@@ -92,10 +92,9 @@ public class JmxNotificationEventBuilderMetadata extends AbstractBeanMetadata {
             case "defaultSourcetype":
                 answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(String.class, propertyValue));
                 break;
-            case "includeNullAttrs":
-            case "includeEmptyAttrs":
-            case "includeZeroAttrs":
-            case "includeEmptyLists":
+            case "includeNullAttributes":
+            case "includeEmptyAttributes":
+            case "includeEmptyObjectNameLists":
             case "includeNotificationMessage":
             case "includeNotificationSequenceNumber":
             case "includeNotificationSource":

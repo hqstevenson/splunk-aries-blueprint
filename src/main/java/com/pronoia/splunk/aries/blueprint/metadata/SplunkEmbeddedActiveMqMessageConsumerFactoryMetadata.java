@@ -43,7 +43,7 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends Abstra
 
     static {
         ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
-        ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client", "splunkClient"); // ref
+        ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client-id", "splunkClient"); // ref
         ATTRIBUTE_TO_PROPERTY_MAP.put("jms-user-name", "userName"); // ref
         ATTRIBUTE_TO_PROPERTY_MAP.put("jms-password", "password"); // ref
     }
@@ -112,7 +112,7 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends Abstra
     public List<BeanProperty> getProperties() {
         List<BeanProperty> answer = super.getProperties();
 
-        if (!hasAttribute("splunk-client")) {
+        if (!hasAttribute("splunk-client-id")) {
             MutableReferenceMetadata referenceMetadata = ReferenceMetadataUtil.create(EventCollectorClient.class);
             if (namespaceHandler.hasDefaultSplunkClientId()) {
                 referenceMetadata.setFilter("splunk-client-id=" + namespaceHandler.getDefaultSplunkClientId());

@@ -48,7 +48,7 @@ public class SplunkJmxAttributeChangeMonitorMetadata extends AbstractSingletonBe
     static {
         ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
         ATTRIBUTE_TO_PROPERTY_MAP.put("id", null);
-        ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client", "splunkClient"); // ref
+        ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client-id", "splunkClient"); // ref
         ATTRIBUTE_TO_PROPERTY_MAP.put("granularity-period", "granularityPeriod");
         ATTRIBUTE_TO_PROPERTY_MAP.put("max-suppressed-duplicate-events", "maxSuppressedDuplicates");
     }
@@ -119,7 +119,7 @@ public class SplunkJmxAttributeChangeMonitorMetadata extends AbstractSingletonBe
     public List<BeanProperty> getProperties() {
         List<BeanProperty> answer = super.getProperties();
 
-        if (!hasAttribute("splunk-client")) {
+        if (!hasAttribute("splunk-client-id")) {
             MutableReferenceMetadata referenceMetadata = ReferenceMetadataUtil.create(EventCollectorClient.class);
             if (namespaceHandler.hasDefaultSplunkClientId()) {
                 referenceMetadata.setFilter("splunk-client-id=" + namespaceHandler.getDefaultSplunkClientId());

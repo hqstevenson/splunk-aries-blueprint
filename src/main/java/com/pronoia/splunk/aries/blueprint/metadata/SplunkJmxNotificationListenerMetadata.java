@@ -45,7 +45,7 @@ public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBean
 
     static {
         ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
-        ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client", "splunkClient"); // ref
+        ATTRIBUTE_TO_PROPERTY_MAP.put("splunk-client-id", "splunkClient"); // ref
     }
 
     final SplunkNamespaceHandler namespaceHandler;
@@ -106,7 +106,7 @@ public class SplunkJmxNotificationListenerMetadata extends AbstractSingletonBean
     public List<BeanProperty> getProperties() {
         List<BeanProperty> answer = super.getProperties();
 
-        if (!hasAttribute("splunk-client")) {
+        if (!hasAttribute("splunk-client-id")) {
             MutableReferenceMetadata referenceMetadata = ReferenceMetadataUtil.create(EventCollectorClient.class);
             if (namespaceHandler.hasDefaultSplunkClientId()) {
                 referenceMetadata.setFilter("splunk-client-id=" + namespaceHandler.getDefaultSplunkClientId());

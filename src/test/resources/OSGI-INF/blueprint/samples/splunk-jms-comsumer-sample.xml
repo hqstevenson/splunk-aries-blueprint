@@ -19,9 +19,11 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <splunk-jmx-notification-listener id="jvm-gc-listener" xmlns="urn:pronoia.com/schema/blueprint/splunk">
-        <source-mbean>java.lang:type=GarbageCollector,name=*</source-mbean>
-        <splunk-event index="fuse_statistics" sourcetype="karaf-jdk-gc" />
-    </splunk-jmx-notification-listener>
+    <splunk-embedded-activemq-message-consumer-factory id="splunk-audit-queue-consumers" xmlns="urn:pronoia.com/schema/blueprint/splunk">
+        <destination-pattern destination-type="Queue">splunk.audit*</destination-pattern>
+        <splunk-event index="jboss-fuse-jms" sourcetype="activemq-queue" >
+            <system-property property="karaf.name" field="container" />
+        </splunk-event>
+    </splunk-embedded-activemq-message-consumer-factory>
 
 </blueprint>

@@ -18,8 +18,8 @@
 
 --><blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <splunk-jmx-attribute-change-monitor xmlns="urn:pronoia.com/schema/blueprint/splunk"
-                                         granularity-period="5" max-suppressed-duplicate-events="6">
+    <splunk-jmx-attribute-change-monitor id="thread-change-monitor" xmlns="urn:pronoia.com/schema/blueprint/splunk"
+                                         granularity-period="5" max-suppressed-duplicate-events="6" >
         <observed-object>java.lang:type=Threading</observed-object>
         <observed-attributes>
             <attribute>DaemonThreadCount</attribute>

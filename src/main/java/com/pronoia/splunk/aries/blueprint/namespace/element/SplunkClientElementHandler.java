@@ -67,6 +67,9 @@ public class SplunkClientElementHandler extends AbstractElementHandler {
                 case "use-ssl":
                     answer.setUseSSL(Boolean.valueOf(value));
                     break;
+                case "xmlns":
+                    // Don't need to log this attribute as ignored
+                    break;
                 default:
                     log.warn("Ignoring unknown attribute {} = {}", attribute, value);
                     break;

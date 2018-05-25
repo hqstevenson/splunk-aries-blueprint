@@ -90,9 +90,9 @@ public class JmxAttributeListEventBuilderMetadata extends AbstractBeanMetadata {
             case "defaultSourcetype":
                 answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(String.class, propertyValue));
                 break;
-            case "includeNullAttrs":
-            case "includeEmptyAttrs":
-            case "includeZeroAttrs":
+            case "includeNullAttributes":
+            case "includeEmptyAttributes":
+            case "includeZeroAttributes":
             case "includeEmptyLists":
                 answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(Boolean.class, propertyValue));
                 break;

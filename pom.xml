@@ -23,7 +23,7 @@
     <groupId>com.github.hqstevenson.splunk</groupId>
     <artifactId>splunk.aries.blueprint</artifactId>
     <packaging>bundle</packaging>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
 
     <name>Splunk Blueprint Support (Apache Aries)</name>
     <description>

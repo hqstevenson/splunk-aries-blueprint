@@ -46,7 +46,7 @@ public class SplunkClientElementHandler extends AbstractElementHandler {
         for (String attribute : attributeValues.keySet()) {
             String value = attributeValues.get(attribute);
 
-            log.info("Processing attribute {} = {}", attribute, value);
+            log.debug("Processing attribute {} = {}", attribute, value);
 
             switch (attribute) {
                 case "id":

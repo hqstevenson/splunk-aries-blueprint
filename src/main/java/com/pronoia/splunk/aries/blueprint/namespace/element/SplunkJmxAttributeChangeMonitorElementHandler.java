@@ -17,8 +17,8 @@
 package com.pronoia.splunk.aries.blueprint.namespace.element;
 
 import java.util.List;
+import java.util.Map;
 
-import com.pronoia.aries.blueprint.util.namespace.AbstractElementHandler;
 import com.pronoia.aries.blueprint.util.parser.ElementParser;
 
 import com.pronoia.splunk.aries.blueprint.metadata.JmxAttributeListEventBuilderMetadata;
@@ -29,16 +29,18 @@ import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
 import org.osgi.service.blueprint.reflect.Metadata;
 
 
-public class SplunkJmxAttributeChangeMonitorElementHandler extends AbstractElementHandler {
+public class SplunkJmxAttributeChangeMonitorElementHandler extends AbstractSplunkElementHandler {
     public SplunkJmxAttributeChangeMonitorElementHandler(SplunkNamespaceHandler namespaceHandler, String elementTagName) {
         super(namespaceHandler, elementTagName);
     }
 
     @Override
     public Metadata createMetadata(ElementParser handledElementParser) {
-        SplunkJmxAttributeChangeMonitorMetadata answer = new SplunkJmxAttributeChangeMonitorMetadata(getNamespaceHandler());
+        SplunkJmxAttributeChangeMonitorMetadata answer = new SplunkJmxAttributeChangeMonitorMetadata();
 
-        answer.setAttributes(handledElementParser.getAttributeValueMap(), true);
+        Map<String, String> attributeValues = handledElementParser.getAttributeValueMap();
+        addDefaultSplunkClientId(attributeValues);
+        answer.addProperties(attributeValues, true);
 
         List<String> observedObjects = handledElementParser.getElementValues("observed-object", true);
         answer.setObservedObjects(observedObjects);
@@ -49,9 +51,10 @@ public class SplunkJmxAttributeChangeMonitorElementHandler extends AbstractEleme
             answer.setObservedAttributes(observedAttributes);
         }
 
+        List<String> collectedAttributes = null;
         ElementParser collectedAttributesElement = handledElementParser.getElement("collected-attributes");
         if (collectedAttributesElement != null) {
-            List<String> collectedAttributes = collectedAttributesElement.getElementValues("attribute");
+            collectedAttributes = collectedAttributesElement.getElementValues("attribute");
             answer.setCollectedAttributes(collectedAttributes);
         }
 
@@ -61,35 +64,24 @@ public class SplunkJmxAttributeChangeMonitorElementHandler extends AbstractEleme
             answer.setExcludedAttributes(excludedAttributes);
         }
 
-        ElementParser splunkEventBuilderElement = handledElementParser.getElement("splunk-event");
-        if (splunkEventBuilderElement != null) {
-            JmxAttributeListEventBuilderMetadata builderMetadata = new JmxAttributeListEventBuilderMetadata();
-            builderMetadata.setAttributes(splunkEventBuilderElement.getAttributeValueMap(), true);
+        ElementParser splunkEventConfigurationElement = handledElementParser.getElement("splunk-event");
+        if (splunkEventConfigurationElement != null) {
+            JmxAttributeListEventBuilderMetadata eventBuilderMetadata = new JmxAttributeListEventBuilderMetadata();
+            eventBuilderMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
 
-            if (answer.hasCollectedAttributes()) {
-                builderMetadata.setCollectedAttributes(answer.getCollectedAttributes());
-            }
-            List<ElementParser> systemPropertyElements = splunkEventBuilderElement.getElements("system-property");
-            if (systemPropertyElements != null && !systemPropertyElements.isEmpty()) {
-                for (ElementParser systemPropertyElement : systemPropertyElements) {
-                    String property = systemPropertyElement.getAttribute("property", true);
-                    String field = systemPropertyElement.getAttribute("field");
-                    if (field == null || field.isEmpty()) {
-                        builderMetadata.addSystemProperty(property);
-                    } else {
-                        builderMetadata.addSystemProperty(property, field);
-                    }
-                }
-            }
-            answer.setEventBuilderMetadata(builderMetadata);
+            // TODO:  Figure out why this line causes a second observedAttributes property to be set on the answer, and why it has both collected and observed attributes
+//            if (collectedAttributes != null) {
+//                eventBuilderMetadata.setCollectedAttributes(collectedAttributes);
+//            }
+
+            eventBuilderMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
+            eventBuilderMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
+
+            answer.setEventBuilderMetadata(eventBuilderMetadata);
         }
+
+        log.debug("Returning metadata for Splunk JMX Attribute Change Monitor: {}", answer);
 
         return answer;
     }
-
-    @Override
-    protected SplunkNamespaceHandler getNamespaceHandler() {
-        return (SplunkNamespaceHandler) super.getNamespaceHandler();
-    }
-
 }

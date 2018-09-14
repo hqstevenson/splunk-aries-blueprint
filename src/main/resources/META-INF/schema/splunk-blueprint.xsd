@@ -22,11 +22,15 @@
         targetNamespace="urn:pronoia.com/schema/blueprint/splunk"
         elementFormDefault="qualified">
 
+    <!--
+        NOTE:  The types for all of the attributes are xs:string to allow the use of Blueprint CM Property Placeholders.
+     -->
+
     <xs:element name="splunk-client">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="host" type="xs:string" use="required"/>
-            <xs:attribute name="port" type="xs:unsignedShort" default="8088"/>
+            <xs:attribute name="port" type="xs:string" default="8088"/>
             <xs:attribute name="authorization-token" type="xs:string" use="required">
                 <xs:annotation>
                     <xs:documentation>
@@ -34,8 +38,15 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="validate-certificates" type="xs:boolean" default="true"/>
-            <xs:attribute name="use-ssl" type="xs:boolean" default="true"/>
+            <xs:attribute name="validate-certificates" type="xs:string" default="true"/>
+            <xs:attribute name="use-ssl" type="xs:string" default="true"/>
+            <xs:attribute name="depends-on" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        May want to change this to use the TdependsOn type from the Blueprint schema
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
@@ -87,6 +98,12 @@
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="field" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:attribute name="property" type="xs:string" use="required"/>
@@ -98,10 +115,10 @@
                         <xs:attribute name="source" type="xs:string"/>
                         <xs:attribute name="sourcetype" type="xs:string"/>
 
-                        <xs:attribute name="include-null-attrs" type="xs:boolean"/>
-                        <xs:attribute name="include-empty-attrs" type="xs:boolean"/>
-                        <xs:attribute name="include-zero-attrs" type="xs:boolean"/>
-                        <xs:attribute name="include-empty-list" type="xs:boolean"/>
+                        <xs:attribute name="include-null-attrs" type="xs:string"/>
+                        <xs:attribute name="include-empty-attrs" type="xs:string"/>
+                        <xs:attribute name="include-zero-attrs" type="xs:string"/>
+                        <xs:attribute name="include-empty-list" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -122,6 +139,13 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="depends-on" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        May want to change this to use the TdependsOn type from the Blueprint schema
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
@@ -132,6 +156,12 @@
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="field" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:attribute name="property" type="xs:string" use="required"/>
@@ -157,7 +187,14 @@
             </xs:sequence>
 
             <xs:attribute name="id" type="xs:ID" use="required"/>
-            <xs:attribute name="splunk-client-id" type="xs:NCName" />
+            <xs:attribute name="splunk-client-id" type="xs:string" />
+            <xs:attribute name="depends-on" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        May want to change this to use the TdependsOn type from the Blueprint schema
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
@@ -183,6 +220,12 @@
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="field" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:attribute name="property" type="xs:string" use="required"/>
@@ -193,17 +236,17 @@
                         <xs:attribute name="index" type="xs:string"/>
                         <xs:attribute name="source" type="xs:string"/>
                         <xs:attribute name="sourcetype" type="xs:string"/>
-                        <xs:attribute name="include-jms-destination" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-delivery-mode" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-expiration" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-priority" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-message-id" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-timestamp" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-correlation-id" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-reply-to" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-type" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-redelivered" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-properties" type="xs:boolean"/>
+                        <xs:attribute name="include-jms-destination" type="xs:string"/>
+                        <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
+                        <xs:attribute name="include-jms-expiration" type="xs:string"/>
+                        <xs:attribute name="include-jms-priority" type="xs:string"/>
+                        <xs:attribute name="include-jms-message-id" type="xs:string"/>
+                        <xs:attribute name="include-jms-timestamp" type="xs:string"/>
+                        <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
+                        <xs:attribute name="include-jms-reply-to" type="xs:string"/>
+                        <xs:attribute name="include-jms-type" type="xs:string"/>
+                        <xs:attribute name="include-jms-redelivered" type="xs:string"/>
+                        <xs:attribute name="include-jms-properties" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -212,6 +255,13 @@
             <xs:attribute name="splunk-client-id" type="xs:NCName" />
             <xs:attribute name="jms-user-name" type="xs:string" />
             <xs:attribute name="jms-password" type="xs:string" />
+            <xs:attribute name="depends-on" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        May want to change this to use the TdependsOn type from the Blueprint schema
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
@@ -237,6 +287,12 @@
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="field" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:attribute name="property" type="xs:string" use="required"/>
@@ -247,17 +303,17 @@
                         <xs:attribute name="index" type="xs:string"/>
                         <xs:attribute name="source" type="xs:string"/>
                         <xs:attribute name="sourcetype" type="xs:string"/>
-                        <xs:attribute name="include-jms-destination" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-delivery-mode" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-expiration" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-priority" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-message-id" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-timestamp" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-correlation-id" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-reply-to" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-type" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-redelivered" type="xs:boolean"/>
-                        <xs:attribute name="include-jms-properties" type="xs:boolean"/>
+                        <xs:attribute name="include-jms-destination" type="xs:string"/>
+                        <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
+                        <xs:attribute name="include-jms-expiration" type="xs:string"/>
+                        <xs:attribute name="include-jms-priority" type="xs:string"/>
+                        <xs:attribute name="include-jms-message-id" type="xs:string"/>
+                        <xs:attribute name="include-jms-timestamp" type="xs:string"/>
+                        <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
+                        <xs:attribute name="include-jms-reply-to" type="xs:string"/>
+                        <xs:attribute name="include-jms-type" type="xs:string"/>
+                        <xs:attribute name="include-jms-redelivered" type="xs:string"/>
+                        <xs:attribute name="include-jms-properties" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -266,6 +322,13 @@
             <xs:attribute name="splunk-client-id" type="xs:NCName" />
             <xs:attribute name="jms-user-name" type="xs:string" />
             <xs:attribute name="jms-password" type="xs:string" />
+            <xs:attribute name="depends-on" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        May want to change this to use the TdependsOn type from the Blueprint schema
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

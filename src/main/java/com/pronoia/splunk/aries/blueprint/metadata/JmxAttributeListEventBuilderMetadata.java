@@ -32,120 +32,52 @@ import com.pronoia.splunk.jmx.eventcollector.eventbuilder.JmxAttributeListEventB
 import org.osgi.service.blueprint.container.ComponentDefinitionException;
 import org.osgi.service.blueprint.reflect.BeanProperty;
 
+import org.osgi.service.blueprint.reflect.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class JmxAttributeListEventBuilderMetadata extends AbstractBeanMetadata {
-    static final Map<String, String> ATTRIBUTE_TO_PROPERTY_MAP;
-
-    static {
-        ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
-        ATTRIBUTE_TO_PROPERTY_MAP.put("index", "defaultIndex");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("source", "defaultSource");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("sourcetype", "defaultSourcetype");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-null-attrs", "includeNullAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-attrs", "includeEmptyAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-zero-attrs", "includeZeroAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-lists", "includeEmptyLists");
-    }
-
-    final Logger log = LoggerFactory.getLogger(this.getClassName());
-    List<String> collectedAttributes;
-
-    Map<String, String> includedSystemProperties;
-
+public class JmxAttributeListEventBuilderMetadata extends AbstractJmxEventBuilderMetadata {
     public JmxAttributeListEventBuilderMetadata() {
         super(JmxAttributeListEventBuilder.class.getName());
     }
 
     @Override
-    public boolean usesAttribute(String attributeName) {
-        return ATTRIBUTE_TO_PROPERTY_MAP.containsKey(attributeName);
-    }
+    public String translatePropertyName(String name) {
+        String translatedPropertyName = null;
 
-    @Override
-    public String getPropertyName(String name) {
-        if (usesAttribute(name)) {
-            return ATTRIBUTE_TO_PROPERTY_MAP.get(name);
-        }
-
-        // TODO:  Make the message better - include more detail
-        throw new ComponentDefinitionException("Could not determine property name for " + name);
-    }
-
-    @Override
-    public BeanProperty getPropertyMetadata(String propertyName, String propertyValue) {
-        if (propertyName == null || propertyName.isEmpty()) {
-            // TODO:  Make the message better - include more detail
-            String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - propertyName argument cannot be null or empty", propertyName, propertyValue);
-            throw new IllegalArgumentException(message);
-        }
-
-        BeanProperty answer = null;
-
-        switch (propertyName) {
-            case "defaultIndex":
-            case "defaultSource":
-            case "defaultSourcetype":
-                answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(String.class, propertyValue));
-                break;
-            case "includeNullAttributes":
-            case "includeEmptyAttributes":
-            case "includeZeroAttributes":
-            case "includeEmptyLists":
-                answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(Boolean.class, propertyValue));
+        switch (name) {
+            case "include-zero-attrs":
+                translatedPropertyName = "includeZeroAttributes";
                 break;
             default:
-                // TODO:  Make the message better - include more detail
-                String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - unsupported propertyName", propertyName, propertyValue);
-                throw new IllegalArgumentException(message);
+                translatedPropertyName = super.translatePropertyName(name);
+                break;
         }
 
-        return answer;
+        return translatedPropertyName;
+
     }
 
     @Override
-    public List<BeanProperty> getProperties() {
-        List<BeanProperty> answer = super.getProperties();
+    public Metadata createPropertyMetadata(String propertyName, String propertyValue) {
+        Metadata propertyMetadata = null;
 
-        if (hasCollectedAttributes()) {
-            answer.add(BeanPropertyMetadataUtil.create("collectedAttributes", ListMetadataUtil.create(collectedAttributes)));
+        switch (propertyName) {
+            case "includeZeroAttributes":
+                propertyMetadata = ValueMetadataUtil.create(Boolean.class, propertyValue);
+                break;
+            default:
+                propertyMetadata = super.createPropertyMetadata(propertyName, propertyValue);
         }
 
-        if (hasIncludedSystemProperties()) {
-            answer.add(BeanPropertyMetadataUtil.create("includedSystemProperties", MapMetadataUtil.create(includedSystemProperties)));
-        }
-
-        return answer;
-    }
-
-
-    public boolean hasCollectedAttributes() {
-        return collectedAttributes != null && !collectedAttributes.isEmpty();
+        return propertyMetadata;
     }
 
     public void setCollectedAttributes(List<String> collectedAttributes) {
-        this.collectedAttributes = collectedAttributes;
-    }
-
-    public boolean hasIncludedSystemProperties() {
-        return includedSystemProperties != null && !includedSystemProperties.isEmpty();
-    }
-
-    public void addSystemProperty(String property) {
-        addSystemProperty(property, null);
-    }
-
-    public void addSystemProperty(String property, String field) {
-        if (includedSystemProperties == null) {
-            includedSystemProperties = new HashMap<>();
-        }
-
-        if (field == null || field.isEmpty()) {
-            includedSystemProperties.put(property, property);
-        } else {
-            includedSystemProperties.put(property, field);
+        if (collectedAttributes != null && !collectedAttributes.isEmpty()) {
+            this.addProperty("collectedAttributes", ListMetadataUtil.create(collectedAttributes));
         }
     }
+
 }

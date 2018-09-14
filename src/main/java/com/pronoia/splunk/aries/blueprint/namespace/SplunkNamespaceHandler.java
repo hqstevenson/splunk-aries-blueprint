@@ -17,7 +17,6 @@
 package com.pronoia.splunk.aries.blueprint.namespace;
 
 import com.pronoia.aries.blueprint.util.namespace.AbstractNamespaceHandler;
-
 import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkClientElementHandler;
 import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkEmbeddedActiveMqAdvisoryMessageConsumerFactoryElementHandler;
 import com.pronoia.splunk.aries.blueprint.namespace.element.SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler;

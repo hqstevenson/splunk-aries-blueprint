@@ -29,117 +29,62 @@ import com.pronoia.splunk.jmx.eventcollector.eventbuilder.JmxNotificationEventBu
 import org.osgi.service.blueprint.container.ComponentDefinitionException;
 import org.osgi.service.blueprint.reflect.BeanProperty;
 
+import org.osgi.service.blueprint.reflect.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class JmxNotificationEventBuilderMetadata extends AbstractBeanMetadata {
-    static final Map<String, String> ATTRIBUTE_TO_PROPERTY_MAP;
-
-    static {
-        ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
-        ATTRIBUTE_TO_PROPERTY_MAP.put("index", "defaultIndex");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("source", "defaultSource");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("sourcetype", "defaultSourcetype");
-
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-null-attrs", "includeNullAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-attrs", "includeEmptyAttributes");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-empty-lists", "includeEmptyObjectNameLists");
-
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-message", "includeNotificationMessage");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-sequence-number", "includeNotificationSequenceNumber");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-source", "includeNotificationSource");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-notification-type", "includeNotificationType");
-        ATTRIBUTE_TO_PROPERTY_MAP.put("include-user-data", "includeUserData");
-    }
-
-    final Logger log = LoggerFactory.getLogger(this.getClassName());
-
-    Map<String, String> includedSystemProperties;
-
+public class JmxNotificationEventBuilderMetadata extends AbstractJmxEventBuilderMetadata {
     public JmxNotificationEventBuilderMetadata() {
-        super(JmxNotificationEventBuilder.class.getName());
+        super(JmxNotificationEventBuilder.class);
     }
 
     @Override
-    public boolean usesAttribute(String attributeName) {
-        return ATTRIBUTE_TO_PROPERTY_MAP.containsKey(attributeName);
-    }
+    public String translatePropertyName(String name) {
+        String translatedPropertyName = null;
 
-    @Override
-    public String getPropertyName(String name) {
-        if (usesAttribute(name)) {
-            return ATTRIBUTE_TO_PROPERTY_MAP.get(name);
+        switch (name) {
+            case "include-notification-message":
+                translatedPropertyName = "includeNotificationMessage";
+                break;
+            case "include-notification-sequence-number":
+                translatedPropertyName = "includeNotificationSequenceNumber";
+                break;
+            case "include-notification-source":
+                translatedPropertyName = "includeNotificationSource";
+                break;
+            case "include-notification-type":
+                translatedPropertyName = "includeNotificationType";
+                break;
+            case "include-user-data":
+                translatedPropertyName = "includeUserData";
+                break;
+            default:
+                translatedPropertyName = super.translatePropertyName(name);
+                break;
         }
 
-        // TODO:  Make the message better - include more detail
-        throw new ComponentDefinitionException("Could not determine property name for " + name);
+        return translatedPropertyName;
+
     }
 
     @Override
-    public BeanProperty getPropertyMetadata(String propertyName, String propertyValue) {
-        if (propertyName == null || propertyName.isEmpty()) {
-            // TODO:  Make the message better - include more detail
-            String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - propertyName argument cannot be null or empty", propertyName, propertyValue);
-            throw new IllegalArgumentException(message);
-        }
-
-        BeanProperty answer = null;
+    public Metadata createPropertyMetadata(String propertyName, String propertyValue) {
+        Metadata propertyMetadata = null;
 
         switch (propertyName) {
-            case "defaultIndex":
-            case "defaultSource":
-            case "defaultSourcetype":
-                answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(String.class, propertyValue));
-                break;
-            case "includeNullAttributes":
-            case "includeEmptyAttributes":
-            case "includeEmptyObjectNameLists":
             case "includeNotificationMessage":
             case "includeNotificationSequenceNumber":
             case "includeNotificationSource":
             case "includeNotificationType":
             case "includeUserData":
-                answer = BeanPropertyMetadataUtil.create(propertyName, ValueMetadataUtil.create(Boolean.class, propertyValue));
+                propertyMetadata = ValueMetadataUtil.create(Boolean.class, propertyValue);
                 break;
             default:
-                // TODO:  Make the message better - include more detail
-                String message = String.format("getPropertyMetadata(propertyName[%s], propertyValue[%s]) - unsupported propertyName", propertyName, propertyValue);
-                throw new IllegalArgumentException(message);
+                propertyMetadata = super.createPropertyMetadata(propertyName, propertyValue);
         }
 
-        return answer;
+        return propertyMetadata;
     }
 
-    @Override
-    public List<BeanProperty> getProperties() {
-        List<BeanProperty> answer = super.getProperties();
-
-        if (hasIncludedSystemProperties()) {
-            answer.add(BeanPropertyMetadataUtil.create("includedSystemProperties", MapMetadataUtil.create(includedSystemProperties)));
-        }
-
-        return answer;
-    }
-
-
-    public boolean hasIncludedSystemProperties() {
-        return includedSystemProperties != null && !includedSystemProperties.isEmpty();
-    }
-
-    public void addSystemProperty(String property) {
-        addSystemProperty(property, null);
-    }
-
-    public void addSystemProperty(String property, String field) {
-        if (includedSystemProperties == null) {
-            includedSystemProperties = new HashMap<>();
-        }
-
-        if (field == null || field.isEmpty()) {
-            includedSystemProperties.put(property, property);
-        } else {
-            includedSystemProperties.put(property, field);
-        }
-    }
 }

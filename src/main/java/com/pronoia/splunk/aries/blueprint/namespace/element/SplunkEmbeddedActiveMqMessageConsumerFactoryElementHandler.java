@@ -16,29 +16,28 @@
  */
 package com.pronoia.splunk.aries.blueprint.namespace.element;
 
-import java.util.List;
-import java.util.Map;
-
-import com.pronoia.aries.blueprint.util.namespace.AbstractElementHandler;
 import com.pronoia.aries.blueprint.util.parser.ElementParser;
 import com.pronoia.splunk.aries.blueprint.metadata.ActiveMQMessageEventBuilderMetadata;
 import com.pronoia.splunk.aries.blueprint.metadata.SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata;
 import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
 
+import java.util.Map;
+
 import org.osgi.service.blueprint.reflect.Metadata;
 
 
-public class SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler extends AbstractElementHandler {
+public class SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler extends AbstractSplunkElementHandler {
     public SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler(SplunkNamespaceHandler namespaceHandler, String elementTagName) {
         super(namespaceHandler, elementTagName);
     }
 
     @Override
     public Metadata createMetadata(ElementParser handledElementParser) {
-        SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata answer = new SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata(getNamespaceHandler());
+        SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata answer = new SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata();
 
-        Map<String, String> attributeValueMap = handledElementParser.getAttributeValueMap();
-        answer.setAttributes(handledElementParser.getAttributeValueMap(), true);
+        Map<String, String> attributeValues = handledElementParser.getAttributeValueMap();
+        addDefaultSplunkClientId(attributeValues);
+        answer.addProperties(attributeValues, true);
 
         ElementParser destinationPattern = handledElementParser.getElement("destination-pattern", true);
         answer.setDestinationNamePattern(destinationPattern.getValue(true));
@@ -48,26 +47,17 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler extends 
         if (splunkEventConfigurationElement != null) {
             ActiveMQMessageEventBuilderMetadata eventBuilderMetadata = new ActiveMQMessageEventBuilderMetadata();
 
-            eventBuilderMetadata.setAttributes(splunkEventConfigurationElement.getAttributeValueMap(), true);
+            eventBuilderMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
 
-            List<ElementParser> systemPropertyElements = splunkEventConfigurationElement.getElements("system-property");
-            if (systemPropertyElements != null && !systemPropertyElements.isEmpty()) {
-                for (ElementParser systemPropertyElement : systemPropertyElements) {
-                    String property = systemPropertyElement.getAttribute("property", true);
-                    String field = systemPropertyElement.getAttribute("field");
-                    eventBuilderMetadata.addSystemProperty(property, field);
-                }
-            }
+            eventBuilderMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
+            eventBuilderMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
 
             answer.setEventBuilderMetadata(eventBuilderMetadata);
         }
 
-        return answer;
-    }
+        log.debug("Returning metadata for Splunk Embedded ActiveMQ Message Consumer Factory: {}", answer);
 
-    @Override
-    protected SplunkNamespaceHandler getNamespaceHandler() {
-        return (SplunkNamespaceHandler) super.getNamespaceHandler();
+        return answer;
     }
 
 }

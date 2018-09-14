@@ -17,25 +17,17 @@
 package com.pronoia.splunk.aries.blueprint.metadata;
 
 import com.pronoia.aries.blueprint.util.reflect.ValueMetadataUtil;
-import com.pronoia.splunk.jms.activemq.SplunkEmbeddedActiveMQMessageConsumerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.osgi.service.blueprint.reflect.Metadata;
 
 
-public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends AbstractEventGeneratorMetadata {
-    static final Map<String, String> ATTRIBUTE_TO_PROPERTY_MAP;
-
-    static {
-        ATTRIBUTE_TO_PROPERTY_MAP = new HashMap<>();
-        ATTRIBUTE_TO_PROPERTY_MAP.put("jms-user-name", "userName"); // ref
-        ATTRIBUTE_TO_PROPERTY_MAP.put("jms-password", "password"); // ref
+public abstract class AbstractJmxEventBuilderMetadata extends AbstractEventBuilderMetadata {
+    public AbstractJmxEventBuilderMetadata(String className) {
+        super(className);
     }
 
-    public SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata() {
-        super(SplunkEmbeddedActiveMQMessageConsumerFactory.class);
+    public AbstractJmxEventBuilderMetadata(Class clazz) {
+        super(clazz);
     }
 
     @Override
@@ -43,11 +35,14 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends Abstra
         String translatedPropertyName = null;
 
         switch (name) {
-        case "jms-user-name":
-            translatedPropertyName = "userName";
+        case "include-null-attrs":
+            translatedPropertyName = "includeNullAttributes";
             break;
-        case "jms-password":
-            translatedPropertyName = "password";
+        case "include-empty-attrs":
+            translatedPropertyName = "includeEmptyAttributes";
+            break;
+        case "include-empty-lists":
+            translatedPropertyName = "includeEmptyObjectNameLists";
             break;
         default:
             translatedPropertyName = super.translatePropertyName(name);
@@ -55,6 +50,7 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends Abstra
         }
 
         return translatedPropertyName;
+
     }
 
     @Override
@@ -62,9 +58,10 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends Abstra
         Metadata propertyMetadata = null;
 
         switch (propertyName) {
-        case "userName":
-        case "password":
-            propertyMetadata = ValueMetadataUtil.create(String.class, propertyValue);
+        case "includeNullAttributes":
+        case "includeEmptyAttributes":
+        case "includeEmptyObjectNameLists":
+            propertyMetadata = ValueMetadataUtil.create(Boolean.class, propertyValue);
             break;
         default:
             propertyMetadata = super.createPropertyMetadata(propertyName, propertyValue);
@@ -73,15 +70,4 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata extends Abstra
         return propertyMetadata;
     }
 
-    public void setDestinationType(String destinationType) {
-        if (destinationType != null && !destinationType.isEmpty()) {
-            addProperty("destinationType", ValueMetadataUtil.create(String.class, destinationType));
-        }
-    }
-
-    public void setDestinationNamePattern(String destinationNamePattern) {
-        if (destinationNamePattern != null && !destinationNamePattern.isEmpty()) {
-            addProperty("destinationNamePattern", ValueMetadataUtil.create(String.class, destinationNamePattern));
-        }
-    }
 }

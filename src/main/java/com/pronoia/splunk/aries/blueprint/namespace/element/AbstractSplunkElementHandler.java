@@ -50,6 +50,43 @@ public abstract class AbstractSplunkElementHandler extends AbstractElementHandle
         }
     }
 
+    protected MutableMapMetadata parseConstantFields(ElementParser elementParser) {
+        MutableMapMetadata constantFieldMetadata = MapMetadataUtil.create(String.class, String.class);
+
+        List<ElementParser> constantFieldElements = elementParser.getElements("constant-field");
+        if (constantFieldElements != null && !constantFieldElements.isEmpty()) {
+
+            for (ElementParser constantFieldElement : constantFieldElements) {
+                String field = constantFieldElement.getAttribute("field", true);
+                String value = constantFieldElement.getAttribute("value", true);
+                MapMetadataUtil.addValue(constantFieldMetadata, field, value);
+            }
+        }
+
+        return constantFieldMetadata;
+    }
+
+    protected MutableMapMetadata parseEnvironmentVariables(ElementParser elementParser) {
+        MutableMapMetadata environmentVariableMetadata = MapMetadataUtil.create(String.class, String.class);
+
+        List<ElementParser> environmentVariableElements = elementParser.getElements("environment-variable");
+        if (environmentVariableElements != null && !environmentVariableElements.isEmpty()) {
+
+            for (ElementParser environmentVariableElement : environmentVariableElements) {
+                String variable = environmentVariableElement.getAttribute("variable", true);
+                String field = environmentVariableElement.getAttribute("field");
+                if (field != null && !field.isEmpty()) {
+                    MapMetadataUtil.addValue(environmentVariableMetadata, variable, field);
+                } else {
+                    MapMetadataUtil.addValue(environmentVariableMetadata, variable, variable);
+                }
+            }
+        }
+
+        return environmentVariableMetadata;
+    }
+
+
     protected MutableMapMetadata parseSystemProperties(ElementParser elementParser) {
         MutableMapMetadata systemPropertyMetadata = MapMetadataUtil.create(String.class, String.class);
 
@@ -71,19 +108,4 @@ public abstract class AbstractSplunkElementHandler extends AbstractElementHandle
     }
 
 
-    protected MutableMapMetadata parseConstantFields(ElementParser elementParser) {
-        MutableMapMetadata constantFieldMetadata = MapMetadataUtil.create(String.class, String.class);
-
-        List<ElementParser> constantFieldElements = elementParser.getElements("constant-field");
-        if (constantFieldElements != null && !constantFieldElements.isEmpty()) {
-
-            for (ElementParser constantFieldElement : constantFieldElements) {
-                String field = constantFieldElement.getAttribute("field", true);
-                String value = constantFieldElement.getAttribute("value", true);
-                MapMetadataUtil.addValue(constantFieldMetadata, field, value);
-            }
-        }
-
-        return constantFieldMetadata;
-    }
 }

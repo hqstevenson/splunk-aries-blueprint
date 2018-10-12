@@ -88,15 +88,22 @@ public abstract class AbstractEventBuilderMetadata extends AbstractBeanMetadata 
         return propertyMetadata;
     }
 
+    public void setConstantFields(MapMetadata constantFieldsMetadata) {
+        if (constantFieldsMetadata != null && !constantFieldsMetadata.getEntries().isEmpty()) {
+            this.addProperty("constantFields", constantFieldsMetadata);
+        }
+    }
+
     public void setSystemProperties(MapMetadata systemPropertiesMetadata) {
         if (systemPropertiesMetadata != null && !systemPropertiesMetadata.getEntries().isEmpty()) {
             this.addProperty("includedSystemProperties", systemPropertiesMetadata);
         }
     }
 
-    public void setConstantFields(MapMetadata constantFieldsMetadata) {
-        if (constantFieldsMetadata != null && !constantFieldsMetadata.getEntries().isEmpty()) {
-            this.addProperty("constantFields", constantFieldsMetadata);
+    public void setEnvironmentVariables(MapMetadata environmentVariableMetadata) {
+        if (environmentVariableMetadata != null && !environmentVariableMetadata.getEntries().isEmpty()) {
+            this.addProperty("includedEnvironmentVariables", environmentVariableMetadata);
         }
     }
+
 }

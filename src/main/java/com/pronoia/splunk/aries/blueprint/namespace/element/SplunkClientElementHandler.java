@@ -17,6 +17,7 @@
 package com.pronoia.splunk.aries.blueprint.namespace.element;
 
 import com.pronoia.aries.blueprint.util.parser.ElementParser;
+import com.pronoia.splunk.aries.blueprint.metadata.ActiveMQMessageEventBuilderMetadata;
 import com.pronoia.splunk.aries.blueprint.metadata.SplunkEventCollectorClientServiceMetadata;
 import com.pronoia.splunk.aries.blueprint.metadata.SplunkSimpleEventCollectorClientMetadata;
 import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
@@ -39,12 +40,22 @@ public class SplunkClientElementHandler extends AbstractSplunkElementHandler {
         Map<String, String> attributeValues = handledElementParser.getAttributeValueMap();
         splunkSimpleEventCollectorClientMetadata.addProperties(attributeValues, true);
 
+        ElementParser splunkEventConfigurationElement = handledElementParser.getElement("event-fields");
+        if (splunkEventConfigurationElement != null) {
+            splunkSimpleEventCollectorClientMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
+
+            splunkSimpleEventCollectorClientMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
+            splunkSimpleEventCollectorClientMetadata.setEnvironmentVariables(parseEnvironmentVariables(splunkEventConfigurationElement));
+            splunkSimpleEventCollectorClientMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
+        }
+
 
         SplunkEventCollectorClientServiceMetadata splunkEventCollectorClientServiceMetadata = new SplunkEventCollectorClientServiceMetadata(splunkSimpleEventCollectorClientMetadata);
         log.debug("Registering metadata for Splunk Event Collector Client Service {}: {}", splunkEventCollectorClientServiceMetadata.getId(), splunkEventCollectorClientServiceMetadata);
         parserContext.getComponentDefinitionRegistry().registerComponentDefinition(splunkEventCollectorClientServiceMetadata);
 
         log.debug("Returning metadata for Splunk Event Collector Client {}: {}", splunkSimpleEventCollectorClientMetadata.getId(), splunkSimpleEventCollectorClientMetadata);
+
         return splunkSimpleEventCollectorClientMetadata;
     }
 

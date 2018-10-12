@@ -50,6 +50,7 @@ public class SplunkJmxNotificationListenerElementHandler extends AbstractSplunkE
             eventBuilderMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
 
             eventBuilderMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
+            eventBuilderMetadata.setEnvironmentVariables(parseEnvironmentVariables(splunkEventConfigurationElement));
             eventBuilderMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
 
             answer.setEventBuilderMetadata(eventBuilderMetadata);

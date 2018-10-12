@@ -17,10 +17,12 @@
 package com.pronoia.splunk.aries.blueprint.metadata;
 
 import com.pronoia.aries.blueprint.util.reflect.ListMetadataUtil;
+import com.pronoia.aries.blueprint.util.reflect.SetMetadataUtil;
 import com.pronoia.aries.blueprint.util.reflect.ValueMetadataUtil;
 import com.pronoia.splunk.jmx.SplunkJmxAttributeChangeMonitor;
 
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.blueprint.reflect.Metadata;
 
@@ -28,8 +30,16 @@ import org.osgi.service.blueprint.reflect.Metadata;
 public class SplunkJmxAttributeChangeMonitorMetadata extends AbstractEventGeneratorMetadata {
     public SplunkJmxAttributeChangeMonitorMetadata() {
         super(SplunkJmxAttributeChangeMonitor.class);
-
+        setInitMethod("initialize");
+        setDestroyMethod("destroy");
     }
+
+    @Override
+    public void addProperties(Map<String, String> properties, boolean logIgnoredProperties) {
+        super.addProperties(properties, logIgnoredProperties);
+        this.addProperty("changeMonitorId", ValueMetadataUtil.create(getId()));
+    }
+
 
     @Override
     public String translatePropertyName(String name) {
@@ -68,27 +78,27 @@ public class SplunkJmxAttributeChangeMonitorMetadata extends AbstractEventGenera
 
      public void setObservedObjects(List<String> observedObjects) {
         if (observedObjects != null && !observedObjects.isEmpty()) {
-            this.addProperty("observedObjects", ListMetadataUtil.create(observedObjects));
+            this.addProperty("observedObjectNameStrings", SetMetadataUtil.create(observedObjects));
         } else {
-            throw new IllegalArgumentException("setObservedObjects(List<String>) - List cannot be null or empty");
+            throw new IllegalArgumentException("setObservedObjectNameStrings(Set<String>) - List cannot be null or empty");
         }
     }
 
     public void setObservedAttributes(List<String> observedAttributes) {
         if (observedAttributes != null && !observedAttributes.isEmpty()) {
-            this.addProperty("observedAttributes", ListMetadataUtil.create(observedAttributes));
+            this.addProperty("observedAttributes", SetMetadataUtil.create(observedAttributes));
         }
     }
 
     public void setCollectedAttributes(List<String> collectedAttributes) {
         if (collectedAttributes != null && !collectedAttributes.isEmpty()) {
-            this.addProperty("collectedAttributes", ListMetadataUtil.create(collectedAttributes));
+            this.addProperty("collectedAttributes", SetMetadataUtil.create(collectedAttributes));
         }
     }
 
     public void setExcludedAttributes(List<String> excludedAttributes) {
         if (excludedAttributes != null && !excludedAttributes.isEmpty()) {
-            this.addProperty("excludedAttributes", ListMetadataUtil.create(excludedAttributes));
+            this.addProperty("excludedAttributes", SetMetadataUtil.create(excludedAttributes));
         }
     }
 }

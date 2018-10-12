@@ -17,18 +17,29 @@
 package com.pronoia.splunk.aries.blueprint.metadata;
 
 import com.pronoia.aries.blueprint.util.reflect.ListMetadataUtil;
+import com.pronoia.aries.blueprint.util.reflect.ValueMetadataUtil;
 import com.pronoia.splunk.jmx.SplunkJmxNotificationListener;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class SplunkJmxNotificationListenerMetadata extends AbstractEventGeneratorMetadata {
 
     public SplunkJmxNotificationListenerMetadata() {
         super(SplunkJmxNotificationListener.class);
+        setInitMethod("initialize");
+        setDestroyMethod("destroy");
     }
 
-     public void setSourceMBeans(List<String> sourceMBeans) {
+    @Override
+    public void addProperties(Map<String, String> properties, boolean logIgnoredProperties) {
+        super.addProperties(properties, logIgnoredProperties);
+        this.addProperty("notificationListenerId", ValueMetadataUtil.create(getId()));
+    }
+
+
+    public void setSourceMBeans(List<String> sourceMBeans) {
         if (sourceMBeans != null && !sourceMBeans.isEmpty()) {
             this.addProperty("sourceMBeans", ListMetadataUtil.create(sourceMBeans));
         } else {

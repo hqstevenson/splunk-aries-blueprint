@@ -18,7 +18,7 @@ package com.pronoia.splunk.aries.blueprint.namespace.element;
 
 import com.pronoia.aries.blueprint.util.parser.ElementParser;
 import com.pronoia.splunk.aries.blueprint.metadata.ActiveMQMessageEventBuilderMetadata;
-import com.pronoia.splunk.aries.blueprint.metadata.SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata;
+import com.pronoia.splunk.aries.blueprint.metadata.SplunkEmbeddedActiveMqConsumerFactoryMetadata;
 import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
 
 import java.util.Map;
@@ -33,7 +33,7 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler extends 
 
     @Override
     public Metadata createMetadata(ElementParser handledElementParser) {
-        SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata answer = new SplunkEmbeddedActiveMqMessageConsumerFactoryMetadata();
+        SplunkEmbeddedActiveMqConsumerFactoryMetadata answer = new SplunkEmbeddedActiveMqConsumerFactoryMetadata();
 
         Map<String, String> attributeValues = handledElementParser.getAttributeValueMap();
         addDefaultSplunkClientId(attributeValues);
@@ -50,6 +50,7 @@ public class SplunkEmbeddedActiveMqMessageConsumerFactoryElementHandler extends 
             eventBuilderMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
 
             eventBuilderMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
+            eventBuilderMetadata.setEnvironmentVariables(parseEnvironmentVariables(splunkEventConfigurationElement));
             eventBuilderMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
 
             answer.setEventBuilderMetadata(eventBuilderMetadata);

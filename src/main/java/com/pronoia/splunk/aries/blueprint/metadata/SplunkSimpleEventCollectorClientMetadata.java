@@ -23,6 +23,7 @@ import com.pronoia.splunk.eventcollector.client.SimpleEventCollectorClient;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osgi.service.blueprint.reflect.MapMetadata;
 import org.osgi.service.blueprint.reflect.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,14 @@ public class SplunkSimpleEventCollectorClientMetadata extends AbstractSingletonB
 
     public SplunkSimpleEventCollectorClientMetadata() {
         super(SimpleEventCollectorClient.class);
+        setInitMethod("initialize");
+        setDestroyMethod("destroy");
+    }
+
+    @Override
+    public void addProperties(Map<String, String> properties, boolean logIgnoredProperties) {
+        super.addProperties(properties, logIgnoredProperties);
+        this.addProperty("clientId", ValueMetadataUtil.create(getId()));
     }
 
     @Override
@@ -92,4 +101,23 @@ public class SplunkSimpleEventCollectorClientMetadata extends AbstractSingletonB
 
         return propertyMetadata;
     }
+
+    public void setConstantFields(MapMetadata constantFieldsMetadata) {
+        if (constantFieldsMetadata != null && !constantFieldsMetadata.getEntries().isEmpty()) {
+            this.addProperty("constantFields", constantFieldsMetadata);
+        }
+    }
+
+    public void setSystemProperties(MapMetadata systemPropertiesMetadata) {
+        if (systemPropertiesMetadata != null && !systemPropertiesMetadata.getEntries().isEmpty()) {
+            this.addProperty("includedSystemProperties", systemPropertiesMetadata);
+        }
+    }
+
+    public void setEnvironmentVariables(MapMetadata environmentVariableMetadata) {
+        if (environmentVariableMetadata != null && !environmentVariableMetadata.getEntries().isEmpty()) {
+            this.addProperty("includedEnvironmentVariables", environmentVariableMetadata);
+        }
+    }
+
 }

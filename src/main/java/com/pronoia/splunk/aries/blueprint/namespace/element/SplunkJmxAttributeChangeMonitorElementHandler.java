@@ -75,6 +75,7 @@ public class SplunkJmxAttributeChangeMonitorElementHandler extends AbstractSplun
 //            }
 
             eventBuilderMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
+            eventBuilderMetadata.setEnvironmentVariables(parseEnvironmentVariables(splunkEventConfigurationElement));
             eventBuilderMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
 
             answer.setEventBuilderMetadata(eventBuilderMetadata);

@@ -23,7 +23,7 @@
     <groupId>com.github.hqstevenson.splunk</groupId>
     <artifactId>splunk.aries.blueprint</artifactId>
     <packaging>bundle</packaging>
-    <version>0.2.0</version>
+    <version>2.0.0</version>
 
     <name>Splunk Blueprint Support (Apache Aries)</name>
     <description>
@@ -61,32 +61,32 @@
         <dependency>
             <groupId>com.github.hqstevenson.aries</groupId>
             <artifactId>aries.blueprint.util</artifactId>
-            <version>0.2.0</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.httpec</artifactId>
-            <version>1.5.0</version>
+            <version>2.0.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jmx</artifactId>
-            <version>1.5.0</version>
+            <version>2.0.0</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms</artifactId>
-            <version>1.5.0</version>
+            <version>2.0.0</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms.activemq</artifactId>
-            <version>1.5.0</version>
+            <version>2.0.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -170,7 +170,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -198,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>4.0.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>

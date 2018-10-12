@@ -28,6 +28,36 @@
 
     <xs:element name="splunk-client">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element name="event-fields" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="field" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="variable" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="property" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="host" type="xs:string"/>
+                        <xs:attribute name="index" type="xs:string"/>
+                        <xs:attribute name="source" type="xs:string"/>
+                        <xs:attribute name="sourcetype" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="host" type="xs:string" use="required"/>
             <xs:attribute name="port" type="xs:string" default="8088"/>
@@ -104,6 +134,12 @@
                                     <xs:attribute name="value" type="xs:string" use="required"/>
                                 </xs:complexType>
                             </xs:element>
+                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="variable" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:attribute name="property" type="xs:string" use="required"/>
@@ -160,6 +196,12 @@
                                 <xs:complexType>
                                     <xs:attribute name="field" type="xs:string" use="required"/>
                                     <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="variable" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
@@ -224,6 +266,12 @@
                                 <xs:complexType>
                                     <xs:attribute name="field" type="xs:string" use="required"/>
                                     <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="variable" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
@@ -291,6 +339,12 @@
                                 <xs:complexType>
                                     <xs:attribute name="field" type="xs:string" use="required"/>
                                     <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="variable" type="xs:string" use="required"/>
+                                    <xs:attribute name="field" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">

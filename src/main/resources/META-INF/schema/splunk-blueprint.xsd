@@ -20,6 +20,7 @@
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
         xmlns:xs="http://www.w3.org/2001/XMLSchema"
         targetNamespace="urn:pronoia.com/schema/blueprint/splunk"
+        xmlns:tns="urn:pronoia.com/schema/blueprint/splunk"
         elementFormDefault="qualified">
 
     <!--
@@ -29,34 +30,7 @@
     <xs:element name="splunk-client">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="event-fields" minOccurs="0" maxOccurs="unbounded">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="field" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="variable" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="property" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                        <xs:attribute name="host" type="xs:string"/>
-                        <xs:attribute name="index" type="xs:string"/>
-                        <xs:attribute name="source" type="xs:string"/>
-                        <xs:attribute name="sourcetype" type="xs:string"/>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="event-fields" type="tns:tEventFields" minOccurs="0" />
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="host" type="xs:string" use="required"/>
@@ -127,34 +101,14 @@
                 </xs:element>
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="field" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="variable" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="property" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                        <xs:attribute name="index" type="xs:string"/>
-                        <xs:attribute name="source" type="xs:string"/>
-                        <xs:attribute name="sourcetype" type="xs:string"/>
-
-                        <xs:attribute name="include-null-attrs" type="xs:string"/>
-                        <xs:attribute name="include-empty-attrs" type="xs:string"/>
-                        <xs:attribute name="include-zero-attrs" type="xs:string"/>
-                        <xs:attribute name="include-empty-list" type="xs:string"/>
+                        <xs:complexContent>
+                            <xs:extension base="tns:tEventFields">
+                                <xs:attribute name="include-null-attrs" type="xs:string"/>
+                                <xs:attribute name="include-empty-attrs" type="xs:string"/>
+                                <xs:attribute name="include-zero-attrs" type="xs:string"/>
+                                <xs:attribute name="include-empty-list" type="xs:string"/>
+                            </xs:extension>
+                        </xs:complexContent>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -191,39 +145,19 @@
                 <xs:element name="source-mbean" type="xs:string" maxOccurs="unbounded"/>
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="field" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="variable" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="property" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                        <xs:attribute name="index" type="xs:string"/>
-                        <xs:attribute name="source" type="xs:string"/>
-                        <xs:attribute name="sourcetype" type="xs:string"/>
+                        <xs:complexContent>
+                            <xs:extension base="tns:tEventFields">
+                                <xs:attribute name="include-null-attrs" type="xs:boolean"/>
+                                <xs:attribute name="include-empty-attrs" type="xs:boolean"/>
+                                <xs:attribute name="include-empty-list" type="xs:boolean"/>
 
-                        <xs:attribute name="include-null-attrs" type="xs:boolean"/>
-                        <xs:attribute name="include-empty-attrs" type="xs:boolean"/>
-                        <xs:attribute name="include-empty-list" type="xs:boolean"/>
-
-                        <xs:attribute name="include-notification-message" type="xs:boolean"/>
-                        <xs:attribute name="include-notification-sequence-number" type="xs:boolean"/>
-                        <xs:attribute name="include-notification-source" type="xs:boolean"/>
-                        <xs:attribute name="include-notification-type" type="xs:boolean"/>
-                        <xs:attribute name="include-user-data" type="xs:boolean"/>
+                                <xs:attribute name="include-notification-message" type="xs:boolean"/>
+                                <xs:attribute name="include-notification-sequence-number" type="xs:boolean"/>
+                                <xs:attribute name="include-notification-source" type="xs:boolean"/>
+                                <xs:attribute name="include-notification-type" type="xs:boolean"/>
+                                <xs:attribute name="include-user-data" type="xs:boolean"/>
+                            </xs:extension>
+                        </xs:complexContent>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -261,40 +195,21 @@
                 </xs:element>
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="field" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="variable" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="property" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                        <xs:attribute name="index" type="xs:string"/>
-                        <xs:attribute name="source" type="xs:string"/>
-                        <xs:attribute name="sourcetype" type="xs:string"/>
-                        <xs:attribute name="include-jms-destination" type="xs:string"/>
-                        <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
-                        <xs:attribute name="include-jms-expiration" type="xs:string"/>
-                        <xs:attribute name="include-jms-priority" type="xs:string"/>
-                        <xs:attribute name="include-jms-message-id" type="xs:string"/>
-                        <xs:attribute name="include-jms-timestamp" type="xs:string"/>
-                        <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
-                        <xs:attribute name="include-jms-reply-to" type="xs:string"/>
-                        <xs:attribute name="include-jms-type" type="xs:string"/>
-                        <xs:attribute name="include-jms-redelivered" type="xs:string"/>
-                        <xs:attribute name="include-jms-properties" type="xs:string"/>
+                        <xs:complexContent>
+                            <xs:extension base="tns:tEventFields">
+                                <xs:attribute name="include-jms-destination" type="xs:string"/>
+                                <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
+                                <xs:attribute name="include-jms-expiration" type="xs:string"/>
+                                <xs:attribute name="include-jms-priority" type="xs:string"/>
+                                <xs:attribute name="include-jms-message-id" type="xs:string"/>
+                                <xs:attribute name="include-jms-timestamp" type="xs:string"/>
+                                <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
+                                <xs:attribute name="include-jms-reply-to" type="xs:string"/>
+                                <xs:attribute name="include-jms-type" type="xs:string"/>
+                                <xs:attribute name="include-jms-redelivered" type="xs:string"/>
+                                <xs:attribute name="include-jms-properties" type="xs:string"/>
+                            </xs:extension>
+                        </xs:complexContent>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -334,40 +249,21 @@
                 </xs:element>
                 <xs:element name="splunk-event" minOccurs="0">
                     <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="constant-field" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="field" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="environment-variable" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="variable" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="system-property" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="property" type="xs:string" use="required"/>
-                                    <xs:attribute name="field" type="xs:string"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                        <xs:attribute name="index" type="xs:string"/>
-                        <xs:attribute name="source" type="xs:string"/>
-                        <xs:attribute name="sourcetype" type="xs:string"/>
-                        <xs:attribute name="include-jms-destination" type="xs:string"/>
-                        <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
-                        <xs:attribute name="include-jms-expiration" type="xs:string"/>
-                        <xs:attribute name="include-jms-priority" type="xs:string"/>
-                        <xs:attribute name="include-jms-message-id" type="xs:string"/>
-                        <xs:attribute name="include-jms-timestamp" type="xs:string"/>
-                        <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
-                        <xs:attribute name="include-jms-reply-to" type="xs:string"/>
-                        <xs:attribute name="include-jms-type" type="xs:string"/>
-                        <xs:attribute name="include-jms-redelivered" type="xs:string"/>
-                        <xs:attribute name="include-jms-properties" type="xs:string"/>
+                        <complexContent>
+                            <extension base="tns:tEventFields">
+                                <xs:attribute name="include-jms-destination" type="xs:string"/>
+                                <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
+                                <xs:attribute name="include-jms-expiration" type="xs:string"/>
+                                <xs:attribute name="include-jms-priority" type="xs:string"/>
+                                <xs:attribute name="include-jms-message-id" type="xs:string"/>
+                                <xs:attribute name="include-jms-timestamp" type="xs:string"/>
+                                <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
+                                <xs:attribute name="include-jms-reply-to" type="xs:string"/>
+                                <xs:attribute name="include-jms-type" type="xs:string"/>
+                                <xs:attribute name="include-jms-redelivered" type="xs:string"/>
+                                <xs:attribute name="include-jms-properties" type="xs:string"/>
+                            </extension>
+                        </complexContent>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -385,5 +281,32 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="tEventFields">
+        <xs:sequence>
+            <xs:element name="constant-field" type="tns:tConstantField" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="environment-variable" type="tns:tEnvironmentVariableField" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="system-property" type="tns:tSystemPropertyField" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="index" type="xs:string"/>
+        <xs:attribute name="source" type="xs:string"/>
+        <xs:attribute name="sourcetype" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="tConstantField">
+        <xs:attribute name="field" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="tEnvironmentVariableField">
+        <xs:attribute name="variable" type="xs:string" use="required"/>
+        <xs:attribute name="field" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="tSystemPropertyField">
+        <xs:attribute name="property" type="xs:string" use="required"/>
+        <xs:attribute name="field" type="xs:string"/>
+    </xs:complexType>
+
 
 </schema>

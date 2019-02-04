@@ -21,6 +21,7 @@ import com.pronoia.splunk.jms.activemq.SplunkEmbeddedActiveMQConsumerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.osgi.service.blueprint.reflect.MapMetadata;
 import org.osgi.service.blueprint.reflect.Metadata;
@@ -34,6 +35,9 @@ public class SplunkEmbeddedActiveMqConsumerFactoryMetadata extends AbstractEvent
         ATTRIBUTE_TO_PROPERTY_MAP.put("jms-user-name", "userName"); // ref
         ATTRIBUTE_TO_PROPERTY_MAP.put("jms-password", "password"); // ref
     }
+
+    Set<Integer> consumedHttpStatusCodes;
+    Set<Integer> consumedSplunkStatusCodes;
 
     public SplunkEmbeddedActiveMqConsumerFactoryMetadata() {
         super(SplunkEmbeddedActiveMQConsumerFactory.class);
@@ -53,6 +57,15 @@ public class SplunkEmbeddedActiveMqConsumerFactoryMetadata extends AbstractEvent
         String translatedPropertyName = null;
 
         switch (name) {
+            case "delay":
+                translatedPropertyName = "delaySeconds";
+                break;
+            case "initial-delay":
+                translatedPropertyName = "initialDelaySeconds";
+                break;
+            case "receive-timeout":
+                translatedPropertyName = "receiveTimeoutMillis";
+                break;
             case "jms-user-name":
                 translatedPropertyName = "userName";
                 break;
@@ -92,6 +105,11 @@ public class SplunkEmbeddedActiveMqConsumerFactoryMetadata extends AbstractEvent
             case "eventSourcetype":
                 propertyMetadata = ValueMetadataUtil.create(String.class, propertyValue);
                 break;
+            case "delaySeconds":
+            case "initialDelaySeconds":
+            case "receiveTimeoutMillis":
+                propertyMetadata = ValueMetadataUtil.create(Long.class, propertyValue);
+                break;
             default:
                 propertyMetadata = super.createPropertyMetadata(propertyName, propertyValue);
         }
@@ -110,23 +128,4 @@ public class SplunkEmbeddedActiveMqConsumerFactoryMetadata extends AbstractEvent
             addProperty("destinationNamePattern", ValueMetadataUtil.create(String.class, destinationNamePattern));
         }
     }
-
-    public void setConstantFields(MapMetadata constantFieldsMetadata) {
-        if (constantFieldsMetadata != null && !constantFieldsMetadata.getEntries().isEmpty()) {
-            this.addProperty("constantFields", constantFieldsMetadata);
-        }
-    }
-
-    public void setEnvironmentVariables(MapMetadata environmentVariablesMetadata) {
-        if (environmentVariablesMetadata != null && !environmentVariablesMetadata.getEntries().isEmpty()) {
-            this.addProperty("includedEnvironment", environmentVariablesMetadata);
-        }
-    }
-
-    public void setSystemProperties(MapMetadata systemPropertiesMetadata) {
-        if (systemPropertiesMetadata != null && !systemPropertiesMetadata.getEntries().isEmpty()) {
-            this.addProperty("includedSystemProperties", systemPropertiesMetadata);
-        }
-    }
-
 }

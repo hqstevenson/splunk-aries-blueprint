@@ -16,49 +16,18 @@
  */
 package com.pronoia.splunk.aries.blueprint.namespace.element;
 
-import java.util.Map;
-
-import com.pronoia.aries.blueprint.util.parser.ElementParser;
+import com.pronoia.splunk.aries.blueprint.metadata.AbstractActiveMqMessageEventBuilderMetadata;
 import com.pronoia.splunk.aries.blueprint.metadata.ActiveMQAdvisoryMessageEventBuilderMetadata;
-import com.pronoia.splunk.aries.blueprint.metadata.SplunkEmbeddedActiveMqConsumerFactoryMetadata;
 import com.pronoia.splunk.aries.blueprint.namespace.SplunkNamespaceHandler;
 
-import org.osgi.service.blueprint.reflect.Metadata;
-
-
-public class SplunkEmbeddedActiveMqAdvisoryMessageConsumerFactoryElementHandler extends AbstractSplunkElementHandler {
+public class SplunkEmbeddedActiveMqAdvisoryMessageConsumerFactoryElementHandler extends AbstractSplunkMessageConsumerFactoryElementHandler {
     public SplunkEmbeddedActiveMqAdvisoryMessageConsumerFactoryElementHandler(SplunkNamespaceHandler namespaceHandler, String elementTagName) {
         super(namespaceHandler, elementTagName);
     }
 
     @Override
-    public Metadata createMetadata(ElementParser handledElementParser) {
-        SplunkEmbeddedActiveMqConsumerFactoryMetadata answer = new SplunkEmbeddedActiveMqConsumerFactoryMetadata();
-
-        Map<String, String> attributeValues = handledElementParser.getAttributeValueMap();
-        addDefaultSplunkClientId(attributeValues);
-        answer.addProperties(attributeValues, true);
-
-        ElementParser destinationPattern = handledElementParser.getElement("destination-pattern", true);
-        answer.setDestinationNamePattern(destinationPattern.getValue(true));
-        answer.setDestinationType(destinationPattern.getAttribute("destination-type", true));
-
-        ElementParser splunkEventConfigurationElement = handledElementParser.getElement("splunk-event");
-        if (splunkEventConfigurationElement != null) {
-            ActiveMQAdvisoryMessageEventBuilderMetadata eventBuilderMetadata = new ActiveMQAdvisoryMessageEventBuilderMetadata();
-
-            eventBuilderMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
-
-            eventBuilderMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
-            eventBuilderMetadata.setEnvironmentVariables(parseEnvironmentVariables(splunkEventConfigurationElement));
-            eventBuilderMetadata.setSystemProperties(parseSystemProperties(splunkEventConfigurationElement));
-
-            answer.setEventBuilderMetadata(eventBuilderMetadata);
-        }
-
-        log.debug("Returning metadata for Splunk Embedded ActiveMQ Advisory Message Consumer Factory: {}", answer);
-
-        return answer;
+    AbstractActiveMqMessageEventBuilderMetadata createEventBuilderMetadata() {
+        return new ActiveMQAdvisoryMessageEventBuilderMetadata();
     }
 
 }

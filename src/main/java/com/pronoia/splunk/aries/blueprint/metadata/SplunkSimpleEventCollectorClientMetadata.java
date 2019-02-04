@@ -102,6 +102,30 @@ public class SplunkSimpleEventCollectorClientMetadata extends AbstractSingletonB
         return propertyMetadata;
     }
 
+    public void addEventProperties(Map<String, String> properties, boolean logIgnoredProperties) {
+        if (properties != null && !properties.isEmpty()) {
+            for (String propertyName : properties.keySet()) {
+                String value = properties.get(propertyName);
+                switch (propertyName) {
+                    case "host":
+                        addProperty("eventHost", createPropertyMetadata("eventHost", value));
+                        break;
+                    case "index":
+                        addProperty("eventIndex", createPropertyMetadata("eventIndex", value));
+                        break;
+                    case "source":
+                        addProperty("eventSource", createPropertyMetadata("eventSource", value));
+                        break;
+                    case "sourcetype":
+                        addProperty("eventSourcetype", createPropertyMetadata("eventSourcetype", value));
+                        break;
+                    default:
+                        log.warn("Ignoring event property {} = {}", propertyName, value);
+                }
+            }
+        }
+    }
+
     public void setConstantFields(MapMetadata constantFieldsMetadata) {
         if (constantFieldsMetadata != null && !constantFieldsMetadata.getEntries().isEmpty()) {
             this.addProperty("constantFields", constantFieldsMetadata);

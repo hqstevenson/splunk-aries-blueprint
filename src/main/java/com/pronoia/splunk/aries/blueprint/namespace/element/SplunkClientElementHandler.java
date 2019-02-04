@@ -42,7 +42,7 @@ public class SplunkClientElementHandler extends AbstractSplunkElementHandler {
 
         ElementParser splunkEventConfigurationElement = handledElementParser.getElement("event-fields");
         if (splunkEventConfigurationElement != null) {
-            splunkSimpleEventCollectorClientMetadata.addProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
+            splunkSimpleEventCollectorClientMetadata.addEventProperties(splunkEventConfigurationElement.getAttributeValueMap(), true);
 
             splunkSimpleEventCollectorClientMetadata.setConstantFields(parseConstantFields(splunkEventConfigurationElement));
             splunkSimpleEventCollectorClientMetadata.setEnvironmentVariables(parseEnvironmentVariables(splunkEventConfigurationElement));

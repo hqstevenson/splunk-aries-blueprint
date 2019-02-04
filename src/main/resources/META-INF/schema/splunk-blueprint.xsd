@@ -174,113 +174,66 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="splunk-embedded-activemq-message-consumer-factory">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="destination-pattern">
-                    <xs:complexType>
-                        <xs:simpleContent>
-                            <xs:extension base="xs:string">
-                                <xs:attribute name="destination-type" use="required">
-                                    <xs:simpleType>
-                                        <xs:restriction base="xs:string">
-                                            <xs:enumeration value="Queue"/>
-                                            <xs:enumeration value="Topic"/>
-                                        </xs:restriction>
-                                    </xs:simpleType>
-                                </xs:attribute>
-                            </xs:extension>
-                        </xs:simpleContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="splunk-event" minOccurs="0">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="tns:tEventFields">
-                                <xs:attribute name="include-jms-destination" type="xs:string"/>
-                                <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
-                                <xs:attribute name="include-jms-expiration" type="xs:string"/>
-                                <xs:attribute name="include-jms-priority" type="xs:string"/>
-                                <xs:attribute name="include-jms-message-id" type="xs:string"/>
-                                <xs:attribute name="include-jms-timestamp" type="xs:string"/>
-                                <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
-                                <xs:attribute name="include-jms-reply-to" type="xs:string"/>
-                                <xs:attribute name="include-jms-type" type="xs:string"/>
-                                <xs:attribute name="include-jms-redelivered" type="xs:string"/>
-                                <xs:attribute name="include-jms-properties" type="xs:string"/>
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
+    <xs:element name="splunk-embedded-activemq-message-consumer-factory" type="tns:tActiveMQConsumerFactory"/>
 
-            <xs:attribute name="id" type="xs:ID" use="required"/>
-            <xs:attribute name="splunk-client-id" type="xs:NCName" />
-            <xs:attribute name="jms-user-name" type="xs:string" />
-            <xs:attribute name="jms-password" type="xs:string" />
-            <xs:attribute name="depends-on" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation>
-                        May want to change this to use the TdependsOn type from the Blueprint schema
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="splunk-embedded-activemq-advisory-message-consumer-factory" type="tns:tActiveMQConsumerFactory"/>
 
-    <xs:element name="splunk-embedded-activemq-advisory-message-consumer-factory">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="destination-pattern">
-                    <xs:complexType>
-                        <xs:simpleContent>
-                            <xs:extension base="xs:string">
-                                <xs:attribute name="destination-type" use="required">
-                                    <xs:simpleType>
-                                        <xs:restriction base="xs:string">
-                                            <xs:enumeration value="Queue"/>
-                                            <xs:enumeration value="Topic"/>
-                                        </xs:restriction>
-                                    </xs:simpleType>
-                                </xs:attribute>
-                            </xs:extension>
-                        </xs:simpleContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="splunk-event" minOccurs="0">
-                    <xs:complexType>
-                        <complexContent>
-                            <extension base="tns:tEventFields">
-                                <xs:attribute name="include-jms-destination" type="xs:string"/>
-                                <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
-                                <xs:attribute name="include-jms-expiration" type="xs:string"/>
-                                <xs:attribute name="include-jms-priority" type="xs:string"/>
-                                <xs:attribute name="include-jms-message-id" type="xs:string"/>
-                                <xs:attribute name="include-jms-timestamp" type="xs:string"/>
-                                <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
-                                <xs:attribute name="include-jms-reply-to" type="xs:string"/>
-                                <xs:attribute name="include-jms-type" type="xs:string"/>
-                                <xs:attribute name="include-jms-redelivered" type="xs:string"/>
-                                <xs:attribute name="include-jms-properties" type="xs:string"/>
-                            </extension>
-                        </complexContent>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
+    <xs:complexType name="tActiveMQConsumerFactory">
+        <xs:sequence>
+            <xs:element name="destination-pattern">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="destination-type" use="required">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="Queue"/>
+                                        <xs:enumeration value="Topic"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="consumed-http-status-code" type="positiveInteger" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="consumed-splunk-status-code" type="positiveInteger" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="splunk-event" minOccurs="0">
+                <xs:complexType>
+                    <complexContent>
+                        <extension base="tns:tEventFields">
+                            <xs:attribute name="include-jms-destination" type="xs:string"/>
+                            <xs:attribute name="include-jms-delivery-mode" type="xs:string"/>
+                            <xs:attribute name="include-jms-expiration" type="xs:string"/>
+                            <xs:attribute name="include-jms-priority" type="xs:string"/>
+                            <xs:attribute name="include-jms-message-id" type="xs:string"/>
+                            <xs:attribute name="include-jms-timestamp" type="xs:string"/>
+                            <xs:attribute name="include-jms-correlation-id" type="xs:string"/>
+                            <xs:attribute name="include-jms-reply-to" type="xs:string"/>
+                            <xs:attribute name="include-jms-type" type="xs:string"/>
+                            <xs:attribute name="include-jms-redelivered" type="xs:string"/>
+                            <xs:attribute name="include-jms-properties" type="xs:string"/>
+                        </extension>
+                    </complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
 
-            <xs:attribute name="id" type="xs:ID" use="required"/>
-            <xs:attribute name="splunk-client-id" type="xs:NCName" />
-            <xs:attribute name="jms-user-name" type="xs:string" />
-            <xs:attribute name="jms-password" type="xs:string" />
-            <xs:attribute name="depends-on" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation>
-                        May want to change this to use the TdependsOn type from the Blueprint schema
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="splunk-client-id" type="xs:NCName" />
+        <xs:attribute name="delay" type="xs:string" />
+        <xs:attribute name="initial-delay" type="xs:string" />
+        <xs:attribute name="receive-timeout" type="xs:string" />
+        <xs:attribute name="jms-user-name" type="xs:string" />
+        <xs:attribute name="jms-password" type="xs:string" />
+        <xs:attribute name="depends-on" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    May want to change this to use the TdependsOn type from the Blueprint schema
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
 
     <xs:complexType name="tEventFields">
         <xs:sequence>
@@ -288,6 +241,7 @@
             <xs:element name="environment-variable" type="tns:tEnvironmentVariableField" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="system-property" type="tns:tSystemPropertyField" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
+        <xs:attribute name="host" type="xs:string"/>
         <xs:attribute name="index" type="xs:string"/>
         <xs:attribute name="source" type="xs:string"/>
         <xs:attribute name="sourcetype" type="xs:string"/>

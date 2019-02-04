@@ -23,7 +23,7 @@
     <groupId>com.github.hqstevenson.splunk</groupId>
     <artifactId>splunk.aries.blueprint</artifactId>
     <packaging>bundle</packaging>
-    <version>2.0.1</version>
+    <version>2.1.0</version>
 
     <name>Splunk Blueprint Support (Apache Aries)</name>
     <description>
@@ -61,32 +61,32 @@
         <dependency>
             <groupId>com.github.hqstevenson.aries</groupId>
             <artifactId>aries.blueprint.util</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.httpec</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jmx</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.github.hqstevenson.splunk</groupId>
             <artifactId>splunk.jms.activemq</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
             <optional>true</optional>
         </dependency>
 

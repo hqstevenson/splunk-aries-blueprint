@@ -364,7 +364,10 @@ public class SplunkClientManagedServiceFactory implements ManagedServiceFactory 
             if (!systemPropertyListString.isEmpty()) {
                 String[] systemProperties = systemPropertyListString.split(",");
                 for (String systemProperty : systemProperties) {
-                    client.includeSystemProperty(systemProperty);
+                    String trimmedSystemProperty = systemProperty.trim();
+                    if (!trimmedSystemProperty.isEmpty()) {
+                        client.includeSystemProperty(trimmedSystemProperty);
+                    }
                 }
             } else {
                 log.warn("Ignoring empty value for key: PID={} key={} properties={}", pid, SPLUNK_EVENT_SYSTEM_PROPERTIES, properties);
@@ -395,7 +398,10 @@ public class SplunkClientManagedServiceFactory implements ManagedServiceFactory 
             if (!environmentVariableListString.isEmpty()) {
                 String[] environmentVariables = environmentVariableListString.split(",");
                 for (String environmentVariable : environmentVariables) {
-                    client.includeEnvironmentVariable(environmentVariable);
+                    String trimmedEnvironmentVariable = environmentVariable.trim();
+                    if (!trimmedEnvironmentVariable.isEmpty()) {
+                        client.includeEnvironmentVariable(trimmedEnvironmentVariable);
+                    }
                 }
             } else {
                 log.warn("Ignoring empty value for key: PID={} key={} properties={}", pid, SPLUNK_EVENT_ENVIRONMENT_VARIABLES, properties);

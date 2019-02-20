@@ -19,12 +19,11 @@ package com.pronoia.splunk.aries.blueprint.cm;
 import com.pronoia.splunk.eventcollector.EventCollectorClient;
 import com.pronoia.splunk.eventcollector.client.SimpleEventCollectorClient;
 
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -75,8 +74,8 @@ public class SplunkClientManagedServiceFactory implements ManagedServiceFactory 
     ServiceRegistration registration;
     ServiceTracker configAdminTracker;
 
-    Map<String, ServiceRegistration<SimpleEventCollectorClient>> serviceRegistrationMap = Collections.synchronizedMap(new HashMap<>());
-    Map<String, SimpleEventCollectorClient> clientMap = Collections.synchronizedMap(new HashMap<>());
+    Map<String, ServiceRegistration<SimpleEventCollectorClient>> serviceRegistrationMap = new ConcurrentHashMap<>();
+    Map<String, SimpleEventCollectorClient> clientMap = new ConcurrentHashMap<>();
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
